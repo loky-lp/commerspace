@@ -1,6 +1,7 @@
 <script lang="ts">
     import { page } from '$app/stores'
     import { trpc } from '$lib/trpc/client'
+    import { Button, Spinner } from 'flowbite-svelte'
 
     let greeting = 'press the button to load data'
     let loading = false
@@ -20,3 +21,10 @@
    role="button"
 >Load</a>
 <p>{greeting}</p>
+
+<Button on:click={loadData} disabled={loading} color={!loading ? 'primary' : 'alternative'}>
+    {#if loading}
+        <Spinner class="mr-3" size="4" color="white" />
+    {/if}
+    Palla
+</Button>
