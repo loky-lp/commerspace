@@ -11,6 +11,7 @@
 		"lint": "eslint ."
 	},
 	"devDependencies": {
+		"@prisma/client": "^5.5.2",
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/kit": "^1.20.4",
 		"@trpc/client": "^10.43.0",
@@ -19,6 +20,7 @@
 		"@typescript-eslint/parser": "^6.0.0",
 		"eslint": "^8.28.0",
 		"eslint-plugin-svelte": "^2.30.0",
+		"prisma": "^5.5.2",
 		"svelte": "^4.0.5",
 		"svelte-check": "^3.4.3",
 		"trpc-sveltekit": "^3.5.22",

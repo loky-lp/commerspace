@@ -1,0 +1,114 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("POSTGRES_PRISMA_URL")
+  directUrl         = env("POSTGRES_URL_NON_POOLING")
+  shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+// Notice:
+// - some tables have (onUpdate: Cascade, onDelete: Cascade) when the parent is soft-deletable (deletedAt)
+// - (onUpdate: Cascade) is set explicitly for clarity
+// - prices are expressed in minor currency, no decimals are present
+// - gen_random_uuid() is the native pgcrypto ext from postgres, it generates version 4 UUIDs which are non-sortable
+
+// region: User
+
+/// A simple user role
+enum UserRole {
+  /// The user have no role, this is the default value.
+  NONE
+
+  /// The user is a host and can edit it's own properties
+  HOST
+
+  /// The user is an administrator and have full access to the system.
+  ADMIN
+}
+
+enum UserStatus {
+  NONE
+
+  /// The user is banned and cannot use the application.
+  BANNED
+}
+
+// The user model
+model User {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  /// The user primary email
+  /// ## Note, email are lowercased, there's a chance the email provider is case-sensitive, in that case the user will never receive the email
+  ///
+  /// @email @max(255)
+  email String @unique @db.VarChar(255)
+
+  emailVerifiedAt DateTime?
+
+  /// The user nickname, the user can change it at any time, this field is **not** unique
+  ///
+  /// @max(255)
+//  name String @db.VarChar(255)
+
+  /// The user avatar url
+  ///
+  /// @url
+//  image String
+
+  /// The user first name
+  ///
+  /// @max(255)
+  firstName String @db.VarChar(255)
+
+  /// The user last name
+  ///
+  /// @max(255)
+  lastName String @db.VarChar(255)
+
+  /// The user phone number
+  ///
+  /// @phone(255)
+//  phone String? @db.VarChar(255)
+
+//  phoneVerifiedAt DateTime?
+
+  /// True when the phone number is fake
+//  phoneMarkedAsInvalid Boolean?
+
+//  documentVerifiedAt DateTime?
+
+  /// The user role.
+  role UserRole @default(NONE)
+
+  status UserStatus @default(NONE)
+
+//  lastActivityAt DateTime?
+//  lastLoginAt    DateTime?
+
+  createdAt DateTime  @unique @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  bannedAt  DateTime?
+  deletedAt DateTime?
+
+  /// The user password credentials
+//  credentials Credentials?
+
+  /// The Time-based One-time Password token
+//  totp                    TOTPToken?
+//  accounts                Account[]
+//  sessions                Session[]
+//  passwordResetTokens     PasswordResetToken[]
+//  emailVerificationTokens EmailVerificationToken[]
+//  identificationRequests  UserIdentificationRequest?
+
+  // billing details
+//  billing UserBillingData?
+
+  @@index(createdAt)
+}
+
+// endregion: User
