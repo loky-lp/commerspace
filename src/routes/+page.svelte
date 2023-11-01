@@ -1,30 +1,30 @@
 <script lang="ts">
-    import { page } from '$app/stores'
-    import { trpc } from '$lib/trpc/client'
-    import { Button, Spinner } from 'flowbite-svelte'
+	import { page } from '$app/stores'
+	import { trpc } from '$lib/trpc/client'
+	import { Button, Spinner } from 'flowbite-svelte'
 
-    let greeting = 'press the button to load data'
-    let loading = false
+	let greeting = 'press the button to load data'
+	let loading = false
 
-    const loadData = async () => {
-        loading = true
-        greeting = await trpc($page).example.palla.query()
-        loading = false
-    }
+	const loadData = async () => {
+		loading = true
+		greeting = await trpc($page).example.palla.query()
+		loading = false
+	}
 </script>
 
 <h6>Loading data in<br /><code>+page.svelte</code></h6>
 
 <a aria-busy={loading}
-   href="#load"
-   on:click|preventDefault={loadData}
-   role="button"
+	 href="#load"
+	 on:click|preventDefault={loadData}
+	 role="button"
 >Load</a>
 <p>{greeting}</p>
 
-<Button on:click={loadData} disabled={loading} color={!loading ? 'primary' : 'alternative'}>
-    {#if loading}
-        <Spinner class="mr-3" size="4" color="white" />
-    {/if}
-    Palla
+<Button color={!loading ? 'primary' : 'alternative'} disabled={loading} on:click={loadData}>
+	{#if loading}
+		<Spinner class="mr-3" size="4" color="white" />
+	{/if}
+	Palla
 </Button>
