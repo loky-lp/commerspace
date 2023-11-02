@@ -11,6 +11,8 @@
 		"lint": "eslint ."
 	},
 	"devDependencies": {
+		"@auth/core": "^0.18.0",
+		"@auth/sveltekit": "^0.3.11",
 		"@prisma/client": "^5.5.2",
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/kit": "^1.20.4",
