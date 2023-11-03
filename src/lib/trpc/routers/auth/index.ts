@@ -49,14 +49,12 @@ export const authRouter = router({
 			const user = await prisma.user.create({
 				data: {
 					email,
-					firstName: 'Utente',
-					lastName: 'Anonimo',
 					credentials: {
 						create: {
 							password: passwordHash,
 						},
 					},
-					// TODO Creare email validation entry
+					// TODO Create email validation entry
 				},
 			})
 				.catch(() => {

@@ -62,12 +62,11 @@ model User {
   /// The user first name
   ///
   /// @max(255)
-  firstName String @db.VarChar(255)
-
+  firstName String? @db.VarChar(255)
   /// The user last name
   ///
   /// @max(255)
-  lastName String @db.VarChar(255)
+  lastName  String? @db.VarChar(255)
 
   /// The user phone number
   ///
@@ -116,7 +115,7 @@ model User {
 // region: User credentials
 
 model Account {
-	id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
   type               String
 
@@ -124,21 +123,21 @@ model Account {
   userId String @db.Uuid
 
   /// TODO DOC
-  provider           String
+  provider          String
   /// TODO DOC Maybe The {@link AccountProvider}.
-  providerAccountId  String
+  providerAccountId String
 
-  refreshToken      String?
-  accessToken       String?
-  expiresAt         Int?
-  tokenType         String?
-  scope             String?
-  idToken           String?
-  sessionState      String?
+  refreshToken String?
+  accessToken  String?
+  expiresAt    Int?
+  tokenType    String?
+  scope        String?
+  idToken      String?
+  sessionState String?
 
   /// The {@link Account} creation date.
   createdAt DateTime @default(now())
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId], name: "providerProviderAccountId")
   // TODO Should add @@index(userId)?
@@ -160,9 +159,9 @@ model Credentials {
 
 /// The {@link User} session, a user might maintain multiple sessions at any given time.
 model Session {
-  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id           String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   /// The {@link User} id.
-  userId String @db.Uuid
+  userId       String @db.Uuid
   /// The {@link Session} unique token, intended to be stored in a cookie.
   sessionToken String @unique
 
