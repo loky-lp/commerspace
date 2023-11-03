@@ -8,6 +8,7 @@ import Credentials from '@auth/core/providers/credentials'
 import { hash as makeHash, verify as verifyHash } from 'argon2'
 import { z } from 'zod'
 
+import type { User } from '$lib/prisma'
 import { prisma } from '$lib/prisma'
 
 export type HashedPassword = string
@@ -77,4 +78,42 @@ export const authHandle = SvelteKitAuth({
 			},
 		}),
 	],
+	callbacks: {
+		async signIn({ user, account, credentials }) {
+			console.log('signin callback', user, account, credentials)
+			return true
+		},
+		// async redirect({ url, baseUrl }) {
+		// 	console.log('redirect callback', url, baseUrl)
+		// 	return baseUrl
+		// },
+		async session({ session, user, token }) {
+			console.log('session callback', session, user, token)
+			return {
+				...session,
+				user: {
+					...session.user,
+					id: token.id as string,
+					role: token.role as string,
+				},
+			}
+		},
+		async jwt({ token, user, account, profile }) {
+			console.log('jwt callback', { token, user, account, profile })
+
+			const u = user as User
+
+			// Whe the user is valid the user just logged in
+			if (u) {
+				console.log(u.name)
+				return {
+					...token,
+					id: u.id,
+					role: u.role as string,
+				}
+			}
+
+			return token
+		},
+	},
 }) satisfies Handle
