@@ -3,3 +3,8 @@
 /workspace.xml
 # Editor-based HTTP Client requests
 /httpRequests/
+
+# Datagrip project
+dataSources/
+dataSources.xml
+dataSources.*.xml
