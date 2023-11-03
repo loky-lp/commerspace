@@ -95,12 +95,12 @@ model User {
   deletedAt DateTime?
 
   /// The user password credentials
-//  credentials Credentials?
+  credentials Credentials?
 
   /// The Time-based One-time Password token
 //  totp                    TOTPToken?
-//  accounts                Account[]
-//  sessions                Session[]
+  accounts                Account[]
+  sessions                Session[]
 //  passwordResetTokens     PasswordResetToken[]
 //  emailVerificationTokens EmailVerificationToken[]
 //  identificationRequests  UserIdentificationRequest?
@@ -112,3 +112,96 @@ model User {
 }
 
 // endregion: User
+
+// region: User credentials
+
+model Account {
+	id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  type               String
+
+  /// The {@link User} id.
+  userId String @db.Uuid
+
+  /// TODO DOC
+  provider           String
+  /// TODO DOC Maybe The {@link AccountProvider}.
+  providerAccountId  String
+
+  refreshToken      String?
+  accessToken       String?
+  expiresAt         Int?
+  tokenType         String?
+  scope             String?
+  idToken           String?
+  sessionState      String?
+
+  /// The {@link Account} creation date.
+  createdAt DateTime @default(now())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId], name: "providerProviderAccountId")
+  // TODO Should add @@index(userId)?
+}
+
+// Note: only one password credentials is allowed per user
+model Credentials {
+  /// The {@link User} id.
+  id String @id @db.Uuid
+
+  /// The password hash
+  password String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  user User @relation(fields: [id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+/// The {@link User} session, a user might maintain multiple sessions at any given time.
+model Session {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  /// The {@link User} id.
+  userId String @db.Uuid
+  /// The {@link Session} unique token, intended to be stored in a cookie.
+  sessionToken String @unique
+
+  /// The session pool
+//  pool String
+
+  /// The session ip, used to check whether the session has been hijacked
+//  ip String
+
+  /// The session user agent, used to check whether the session has been hijacked
+//  userAgent String
+
+  /// The session expiration date, after this date, the session is considered invalid, and it will be removed from the database at a later time..
+  expiresAt DateTime
+
+  /// The {@link Session} creation date.
+  createdAt DateTime @default(now())
+
+  /// The {@link Session} last update date.
+  updatedAt DateTime @default(now()) @updatedAt
+
+//  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+//model VerificationToken {
+//  token String @id
+//
+//  identifier String
+//  expiresAt  DateTime
+//
+//  createdAt DateTime @default(now())
+//  updatedAt DateTime @default(now()) @updatedAt
+//
+//  @@unique([identifier, token])
+//}
+
+// TODO model EmailVerificationToken
+
+// TODO model PasswordResetToken
+
+// endregion: User credentials
