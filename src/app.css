@@ -2,3 +2,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+
+}
+
+@layer components {
+	.map-popup-place-content .maplibregl-popup-content {
+		@apply bg-green-500 p-0 rounded-xl overflow-hidden;
+	}
+}
+
+@layer utilities {
+	.map-popup-hide-tip .maplibregl-popup-tip {
+		@apply hidden;
+	}
+}
