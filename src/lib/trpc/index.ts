@@ -1,8 +1,9 @@
 import type { Context } from '$lib/trpc/context'
 import { initTRPC, TRPCError } from '@trpc/server'
+import superjson from 'superjson'
 
 export const t = initTRPC.context<Context>().create({
-	// TODO: Add superjson transformer
+	transformer: superjson,
 	// TODO: Add error formatter
 })
 
