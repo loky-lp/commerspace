@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { slide } from 'svelte/transition'
 	import { page } from '$app/stores'
 	import { trpc } from '$lib/trpc/client'
 	import { Button, Spinner } from 'flowbite-svelte'
@@ -28,7 +29,9 @@
 
 <Button color={!loading ? 'primary' : 'alternative'} disabled={loading} on:click={loadData}>
 	{#if loading}
-		<Spinner class="mr-3" size="4" color="white" />
+		<div transition:slide={{ axis: 'x' }} class="mr-3">
+			<Spinner size="4" color="white" />
+		</div>
 	{/if}
 	Palla
 </Button>
