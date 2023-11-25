@@ -1,13 +1,13 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch"]
+	provider        = "prisma-client-js"
+	previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
-  provider          = "postgresql"
-  url               = env("POSTGRES_PRISMA_URL")
-  directUrl         = env("POSTGRES_URL_NON_POOLING")
-  shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING")
+	provider          = "postgresql"
+	url               = env("POSTGRES_PRISMA_URL")
+	directUrl         = env("POSTGRES_URL_NON_POOLING")
+	shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 // Notice:
@@ -20,94 +20,91 @@ datasource db {
 
 /// A simple user role
 enum UserRole {
-  /// The user have no role, this is the default value.
-  NONE
-
-  /// The user is a host and can edit it's own properties
-  HOST
-
-  /// The user is an administrator and have full access to the system.
-  ADMIN
+	/// The user have no role, this is the default value.
+	NONE
+	/// The user is a host and can edit it's own properties
+	HOST
+	/// The user is an administrator and have full access to the system.
+	ADMIN
 }
 
 enum UserStatus {
-  NONE
+	NONE
 
-  /// The user is banned and cannot use the application.
-  BANNED
+	/// The user is banned and cannot use the application.
+	BANNED
 }
 
 // The user model
 model User {
-  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+	id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
-  /// The user primary email
-  /// ## Note, email are lowercased, there's a chance the email provider is case-sensitive, in that case the user will never receive the email
-  ///
-  /// @email @max(255)
-  email String @unique @db.VarChar(255)
+	/// The user primary email
+	/// ## Note, email are lowercased, there's a chance the email provider is case-sensitive, in that case the user will never receive the email
+	///
+	/// @email @max(255)
+	email String @unique @db.VarChar(255)
 
-  emailVerifiedAt DateTime?
+	emailVerifiedAt DateTime?
 
-  /// The user nickname, the user can change it at any time, this field is **not** unique
-  ///
-  /// @max(255)
-//  name String @db.VarChar(255)
+	/// The user nickname, the user can change it at any time, this field is **not** unique
+	///
+	/// @max(255)
+	//  name String @db.VarChar(255)
 
-  /// The user avatar url
-  ///
-  /// @url
-//  image String
+	/// The user avatar url
+	///
+	/// @url
+	//  image String
 
-  /// The user first name
-  ///
-  /// @max(255)
-  firstName String? @db.VarChar(255)
-  /// The user last name
-  ///
-  /// @max(255)
-  lastName  String? @db.VarChar(255)
+	/// The user first name
+	///
+	/// @max(255)
+	firstName String? @db.VarChar(255)
+	/// The user last name
+	///
+	/// @max(255)
+	lastName  String? @db.VarChar(255)
 
-  /// The user phone number
-  ///
-  /// @phone(255)
-//  phone String? @db.VarChar(255)
+	/// The user phone number
+	///
+	/// @phone(255)
+	//  phone String? @db.VarChar(255)
 
-//  phoneVerifiedAt DateTime?
+	//  phoneVerifiedAt DateTime?
 
-  /// True when the phone number is fake
-//  phoneMarkedAsInvalid Boolean?
+	/// True when the phone number is fake
+	//  phoneMarkedAsInvalid Boolean?
 
-//  documentVerifiedAt DateTime?
+	//  documentVerifiedAt DateTime?
 
-  /// The user role.
-  role UserRole @default(NONE)
+	/// The user role.
+	role UserRole @default(NONE)
 
-  status UserStatus @default(NONE)
+	status UserStatus @default(NONE)
 
-//  lastActivityAt DateTime?
-//  lastLoginAt    DateTime?
+	//  lastActivityAt DateTime?
+	//  lastLoginAt    DateTime?
 
-  createdAt DateTime  @unique @default(now())
-  updatedAt DateTime  @default(now()) @updatedAt
-  bannedAt  DateTime?
-  deletedAt DateTime?
+	createdAt DateTime  @unique @default(now())
+	updatedAt DateTime  @default(now()) @updatedAt
+	bannedAt  DateTime?
+	deletedAt DateTime?
 
-  /// The user password credentials
-  credentials Credentials?
+	/// The user password credentials
+	credentials Credentials?
 
-  /// The Time-based One-time Password token
-//  totp                    TOTPToken?
-  accounts                Account[]
-  sessions                Session[]
-//  passwordResetTokens     PasswordResetToken[]
-//  emailVerificationTokens EmailVerificationToken[]
-//  identificationRequests  UserIdentificationRequest?
+	/// The Time-based One-time Password token
+	//  totp                    TOTPToken?
+	accounts Account[]
+	sessions Session[]
+	//  passwordResetTokens     PasswordResetToken[]
+	//  emailVerificationTokens EmailVerificationToken[]
+	//  identificationRequests  UserIdentificationRequest?
 
-  // billing details
-//  billing UserBillingData?
-
-  @@index(createdAt)
+	// billing details
+	//  billing UserBillingData?
+	@@index(createdAt)
 }
 
 // endregion: User
@@ -115,79 +112,79 @@ model User {
 // region: User credentials
 
 model Account {
-  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+	id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
-  type               String
+	type String
 
-  /// The {@link User} id.
-  userId String @db.Uuid
+	/// The {@link User} id.
+	userId String @db.Uuid
 
-  /// TODO DOC
-  provider          String
-  /// TODO DOC Maybe The {@link AccountProvider}.
-  providerAccountId String
+	/// TODO DOC
+	provider          String
+	/// TODO DOC Maybe The {@link AccountProvider}.
+	providerAccountId String
 
-  refreshToken String?
-  accessToken  String?
-  expiresAt    Int?
-  tokenType    String?
-  scope        String?
-  idToken      String?
-  sessionState String?
+	refreshToken String?
+	accessToken  String?
+	expiresAt    Int?
+	tokenType    String?
+	scope        String?
+	idToken      String?
+	sessionState String?
 
-  /// The {@link Account} creation date.
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+	/// The {@link Account} creation date.
+	createdAt DateTime @default(now())
+	user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([provider, providerAccountId], name: "providerProviderAccountId")
-  // TODO Should add @@index(userId)?
+	// TODO Should add @@index(userId)?
+	@@unique([provider, providerAccountId], name: "providerProviderAccountId")
 }
 
 // Note: only one password credentials is allowed per user
 model Credentials {
-  /// The {@link User} id.
-  id String @id @db.Uuid
+	/// The {@link User} id.
+	id String @id @db.Uuid
 
-  /// The password hash
-  password String
+	/// The password hash
+	password String
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+	createdAt DateTime @default(now())
+	updatedAt DateTime @default(now()) @updatedAt
 
-  user User @relation(fields: [id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+	user User @relation(fields: [id], references: [id], onUpdate: Cascade, onDelete: Cascade)
 }
 
 /// The {@link User} session, a user might maintain multiple sessions at any given time.
 model Session {
-  id           String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  /// The {@link User} id.
-  userId       String @db.Uuid
-  /// The {@link Session} unique token, intended to be stored in a cookie.
-  sessionToken String @unique
+	id           String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+	/// The {@link User} id.
+	userId       String @db.Uuid
+	/// The {@link Session} unique token, intended to be stored in a cookie.
+	sessionToken String @unique
 
-  /// The session pool
-//  pool String
+	/// The session pool
+	//  pool String
 
-  /// The session ip, used to check whether the session has been hijacked
-//  ip String
+	/// The session ip, used to check whether the session has been hijacked
+	//  ip String
 
-  /// The session user agent, used to check whether the session has been hijacked
-//  userAgent String
+	/// The session user agent, used to check whether the session has been hijacked
+	//  userAgent String
 
-  /// The session expiration date, after this date, the session is considered invalid, and it will be removed from the database at a later time..
-  expiresAt DateTime
+	/// The session expiration date, after this date, the session is considered invalid, and it will be removed from the database at a later time..
+	expiresAt DateTime
 
-  /// The {@link Session} creation date.
-  createdAt DateTime @default(now())
+	/// The {@link Session} creation date.
+	createdAt DateTime @default(now())
 
-  /// The {@link Session} last update date.
-  updatedAt DateTime @default(now()) @updatedAt
+	/// The {@link Session} last update date.
+	updatedAt DateTime @default(now()) @updatedAt
 
-//  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+	//  expires      DateTime
+	user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-//model VerificationToken {
+// model VerificationToken {
 //  token String @id
 //
 //  identifier String
