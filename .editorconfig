@@ -35,6 +35,12 @@ ij_css_space_before_opening_brace = true
 ij_css_use_double_quotes = true
 ij_css_value_alignment = do_not_align
 
+[*.prisma]
+ij_prisma_line_comment_add_space = true
+ij_prisma_line_comment_add_space_on_reformat = true
+ij_prisma_line_comment_at_first_column = false
+ij_prisma_run_prisma_fmt_on_reformat = false
+
 [*.rs]
 indent_size = 4
 indent_style = space
