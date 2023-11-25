@@ -16,6 +16,8 @@ datasource db {
 // - prices are expressed in minor currency, no decimals are present
 // - gen_random_uuid() is the native pgcrypto ext from postgres, it generates version 4 UUIDs which are non-sortable
 
+// TODO Analyze (onUpdate: Cascade, onDelete: Cascade) on all tables
+
 // region: User
 
 /// A simple user role
@@ -101,6 +103,9 @@ model User {
 	//  passwordResetTokens     PasswordResetToken[]
 	//  emailVerificationTokens EmailVerificationToken[]
 	//  identificationRequests  UserIdentificationRequest?
+
+	/// The user locations if it's an host
+	locations Location[]
 
 	// billing details
 	//  billing UserBillingData?
@@ -201,3 +206,120 @@ model Session {
 // TODO model PasswordResetToken
 
 // endregion: User credentials
+
+// TODO Evaluate where to use soft deletition on following models
+// TODO Add: createdAt DateTime @default(now()) updatedAt DateTime @default(now()) @updatedAt
+
+/// The {@link Location} type (restaurant, office, etc..), this is a table and not an enum to allow addition at runtime.
+model LocationType {
+	id String @id
+
+	/// The {@link LocationType} creation date.
+	createdAt DateTime @default(now())
+	/// The {@link LocationType} last update date.
+	updatedAt DateTime @default(now()) @updatedAt
+
+	locations Location[]
+}
+
+/// The Location model
+model Location {
+	id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+	/// The {@link User} id.
+	userId String @db.Uuid
+
+	/// The location displayed name.
+	displayName String
+
+	/// The location description.
+	description String
+
+	/// The location lowercased hypened url slug key (ex. ney-york-joe-rage-room).
+	/// ## NOTE: Do not use in the application, this is added or future use.
+	key String @default(dbgenerated("gen_random_uuid()"))
+
+	// TODO Geolocation data
+
+	/// The location photos as an imgUrl.
+	photos String[]
+
+	/// The {@link LocationType}.
+	typeId String
+
+	/// The {@link LocationRate}.
+	/// TODO Decide if a Location can have multiple rates.
+	rates LocationRate[]
+
+	/// The {@link Service} offered by the location.
+	services LocationService[]
+
+	/// The {@link Location} creation date.
+	createdAt DateTime  @unique @default(now())
+	/// The {@link Location} last update date.
+	updatedAt DateTime  @default(now()) @updatedAt
+	/// The {@link Location} deletition date for soft deletition.
+	deletedAt DateTime?
+
+	user User         @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+	type LocationType @relation(fields: [typeId], references: [id], onUpdate: Cascade, onDelete: Restrict)
+}
+
+/// The interval that determines the billing cicle.
+enum RateInterval {
+	DAY
+	WEEK
+	MONTH
+	YEAR
+}
+
+/// The {@link Location} payment rate, TODO Define if a Location can have multiple rates.
+/// LocationRates should be immutable, edit should not be supported.
+model LocationRate {
+	id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+	/// The {@link Location} id.
+	locationId String @db.Uuid
+
+	/// The price given for each interval.
+	price Int
+
+	/// The quantity of intervals that must elapse before the next charge.
+	quantity Int
+
+	/// The {@link RateInterval} that determines the billing cicle.
+	interval RateInterval
+
+	/// The {@link LocationRate} creation date.
+	createdAt DateTime  @unique @default(now())
+	/// The {@link LocationRate} deletition date for soft deletition.
+	deletedAt DateTime?
+
+	location Location @relation(fields: [locationId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+/// The service that any location can use to define one of its services.
+model Service {
+	id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+	// TODO Define Service model
+	locations LocationService[]
+}
+
+/// The {@link Location} {@link Service} that specify the desired info.
+model LocationService {
+	id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+	/// The {@link Location} id.
+	locationId String @db.Uuid
+	/// The {@link Service} id.
+	serviceId  String @db.Uuid
+
+	/// The {@link LocationService} creation date.
+	createdAt DateTime @unique @default(now())
+	/// The {@link LocationService} last update date.
+	updatedAt DateTime @default(now()) @updatedAt
+
+	location Location @relation(fields: [locationId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+	service  Service  @relation(fields: [serviceId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
