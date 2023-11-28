@@ -81,7 +81,7 @@ async function seed() {
 			lastName: 'Account',
 			email: 'admin@commerspace.com',
 			image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjMUUxRTFFIi8+CjxnIGNsaXAtcGF0aD0idXJsKCNjbGlwMF8wXzEpIj4KPHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IndoaXRlIi8+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjRDlEOUQ5Ii8+CjxjaXJjbGUgY3g9IjUwIiBjeT0iMzEiIHI9IjIzIiBmaWxsPSIjOUM5QzlDIi8+CjxlbGxpcHNlIGN4PSI1MCIgY3k9IjEwMC41IiByeD0iNTAiIHJ5PSIzOC41IiBmaWxsPSIjOUM5QzlDIi8+CjwvZz4KPGRlZnM+CjxjbGlwUGF0aCBpZD0iY2xpcDBfMF8xIj4KPHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IndoaXRlIi8+CjwvY2xpcFBhdGg+CjwvZGVmcz4KPC9zdmc+Cg==',
-			role: 'ADMIN', // TODO Use UserRole enum
+			role: UserRole.ADMIN,
 			credentials: {
 				create: {
 					password: await createPasswordHash('123456'),
@@ -94,7 +94,7 @@ async function seed() {
 			firstName: 'Host',
 			lastName: 'Account',
 			email: 'host@commerspace.com',
-			role: 'HOST', // TODO Use UserRole enum
+			role: UserRole.HOST,
 			credentials: {
 				create: {
 					password: await createPasswordHash('123456'),
@@ -107,7 +107,7 @@ async function seed() {
 			firstName: 'User',
 			lastName: 'Account',
 			email: 'user@commerspace.com',
-			role: 'NONE', // TODO Use UserRole enum
+			role: UserRole.NONE,
 			credentials: {
 				create: {
 					password: await createPasswordHash('123456'),
