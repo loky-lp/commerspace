@@ -21,8 +21,8 @@ const isAuthenticated = t.middleware(async ({ next, ctx }) => {
 
 	return next({
 		ctx: {
-			user
-		}
+			user,
+		},
 	})
 })
 
@@ -30,8 +30,8 @@ const isMaybeAuthenticated = t.middleware(async ({ next, ctx }) => {
 	// TODO: Create guard and check for user validity if present
 	return next({
 		ctx: {
-			user: ctx.session?.user
-		}
+			user: ctx.session?.user,
+		},
 	})
 })
 
