@@ -57,7 +57,7 @@ model User {
 	/// The user avatar url
 	///
 	/// @url
-	//  image String
+	image String?
 
 	/// The user first name
 	///
