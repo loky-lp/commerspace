@@ -19,6 +19,10 @@ const isAuthenticated = t.middleware(async ({ next, ctx }) => {
 	if (!user)
 		throw new TRPCError({ code: 'UNAUTHORIZED' })
 
+	// TODO: Add user info to session object and check if the user is banned
+	// if (!user || user.deletedAt != null || user.status === 'BANNED')
+	// 	throw new TRPCError({ code: 'UNAUTHORIZED' })
+
 	return next({
 		ctx: {
 			user,
@@ -33,6 +37,54 @@ const isMaybeAuthenticated = t.middleware(async ({ next, ctx }) => {
 			user: ctx.session?.user,
 		},
 	})
+})
+
+/**
+ * Create reusable middleware to ensure users are logged in and are admins
+ *
+ * @see https://trpc.io/docs/middlewares
+ */
+const isAdmin = t.middleware(async ({ next, ctx, path, type, input, rawInput, meta }) => {
+	// TODO: Create guard and check for user validity
+	const user = ctx.session?.user
+
+	if (!user)
+		throw new TRPCError({ code: 'UNAUTHORIZED' })
+
+	// TODO: Add user info to session object and check if the user is banned
+	// if (!user || user.deletedAt != null || user.status === 'BANNED')
+	// 	throw new TRPCError({ code: 'UNAUTHORIZED' })
+
+	// if (user.type !== 'ADMIN') {
+	// 	throw new TRPCError({ code: 'FORBIDDEN' })
+	// }
+
+	// TODO: Recording activity
+	// const start = Date.now()
+
+	// const result = await next({
+	return next({
+		ctx: {
+			user,
+		},
+	})
+
+	// const durationMs = Date.now() - start
+	// if (type === 'mutation') {
+	// 	await recordActivity(ctx.prisma, path, {
+	// 		userId: user.id,
+	// 		data: {
+	// 			type,
+	// 			path,
+	// 			durationMs,
+	// 			input,
+	// 			rawInput,
+	// 			meta,
+	// 		},
+	// 	})
+	// }
+
+	// return result
 })
 
 /**
@@ -55,6 +107,13 @@ export const publicProcedure = t.procedure
  * @see https://trpc.io/docs/procedures
  **/
 export const protectedProcedure = t.procedure.use(isAuthenticated)
+
+/**
+ * Create a reusable protected procedure for admins
+ *
+ * @see https://trpc.io/docs/procedures
+ **/
+export const adminProcedure = t.procedure.use(isAdmin)
 
 /**
  * Create a reusable procedure that can be both public or protected
