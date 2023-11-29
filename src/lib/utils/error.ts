@@ -32,9 +32,11 @@ export type ErrorInfo = {
 // 	'NOT_FOUND': '',
 // } as const
 
-export function getErrorInfo(error: Error | TRPCClientError<Router>): ErrorInfo {
+export function getErrorInfo(error: Error | TRPCClientError<Router> | ErrorInfo): ErrorInfo {
 	// TODO: Decide whether to show or not error information to the user
-	if (isTRPCClientError(error)) {
+	if ('name' in error && 'description' in error) {
+		return error
+	} else if (isTRPCClientError(error)) {
 		return {
 			name: error.data?.code ?? '', // tRPCErrorNameMap[error.data?.code ?? ''] ?? '',
 			description: `${error.name}: ${error.data?.code} on ${error.data?.path}`,
