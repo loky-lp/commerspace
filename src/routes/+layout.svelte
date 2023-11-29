@@ -1,4 +1,5 @@
 <script>
+	import '@fontsource-variable/roboto-condensed'
 	import '../app.css'
 	import { signOut } from '@auth/sveltekit/client'
 

@@ -17,6 +17,9 @@ devDependencies:
   '@faker-js/faker':
     specifier: ^8.3.1
     version: 8.3.1
+  '@fontsource-variable/roboto-condensed':
+    specifier: ^5.0.1
+    version: 5.0.1
   '@prisma/client':
     specifier: ^5.5.2
     version: 5.5.2(prisma@5.5.2)
@@ -432,6 +435,10 @@ packages:
 
   /@floating-ui/utils@0.1.6:
     resolution: {integrity: sha512-OfX7E2oUDYxtBvsuS4e/jSn4Q9Qb6DzgeYtsAdkPZ47znpoNsMgZw0+tVijiv3uGNR6dgNlty6r9rzIzHjtd/A==}
+    dev: true
+
+  /@fontsource-variable/roboto-condensed@5.0.1:
+    resolution: {integrity: sha512-BvxJDzfIOoKAuwhANe4y4BzerukgJ4y0if5V4sQw9QjtlvADHr/FJgA0UXHSg2sx2GY4ds1XgurfFf/8sBVF2Q==}
     dev: true
 
   /@humanwhocodes/config-array@0.11.13:

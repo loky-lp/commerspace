@@ -22,6 +22,10 @@ const config = {
 					900: '#a5371b',
 				},
 			},
+
+			fontFamily: {
+				'roboto-condensed': '"Roboto Condensed Variable", sans-serif',
+			},
 		},
 	},
 
