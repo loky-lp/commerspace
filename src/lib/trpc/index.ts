@@ -1,5 +1,7 @@
 import type { Context } from '$lib/trpc/context'
 import { initTRPC, TRPCError } from '@trpc/server'
+import { UserRole, UserStatus } from '@prisma/client'
+import { prisma } from '$lib/prisma'
 import superjson from 'superjson'
 
 export const t = initTRPC.context<Context>().create({
@@ -14,14 +16,16 @@ export const t = initTRPC.context<Context>().create({
  */
 const isAuthenticated = t.middleware(async ({ next, ctx }) => {
 	// TODO: Create guard and check for user validity
-	const user = ctx.session?.user
+	const sessionUser = ctx.session?.user
 
-	if (!user)
+	if (!sessionUser)
 		throw new TRPCError({ code: 'UNAUTHORIZED' })
 
-	// TODO: Add user info to session object and check if the user is banned
-	// if (!user || user.deletedAt != null || user.status === 'BANNED')
-	// 	throw new TRPCError({ code: 'UNAUTHORIZED' })
+	// We can't trust JWT data, we need to fetch the user permissions at every request
+	const user = await prisma.user.findUnique({ where: { id: sessionUser.id } })
+
+	if (!user || user.deletedAt != null || user.status === UserStatus.BANNED)
+		throw new TRPCError({ code: 'UNAUTHORIZED' })
 
 	return next({
 		ctx: {
@@ -46,18 +50,19 @@ const isMaybeAuthenticated = t.middleware(async ({ next, ctx }) => {
  */
 const isAdmin = t.middleware(async ({ next, ctx, path, type, input, rawInput, meta }) => {
 	// TODO: Create guard and check for user validity
-	const user = ctx.session?.user
+	const sessionUser = ctx.session?.user
 
-	if (!user)
+	if (!sessionUser)
 		throw new TRPCError({ code: 'UNAUTHORIZED' })
 
-	// TODO: Add user info to session object and check if the user is banned
-	// if (!user || user.deletedAt != null || user.status === 'BANNED')
-	// 	throw new TRPCError({ code: 'UNAUTHORIZED' })
+	// We can't trust JWT data, we need to fetch the user permissions at every request
+	const user = await prisma.user.findUnique({ where: { id: sessionUser.id } })
 
-	// if (user.type !== 'ADMIN') {
-	// 	throw new TRPCError({ code: 'FORBIDDEN' })
-	// }
+	if (!user || user.deletedAt != null || user.status === 'BANNED')
+		throw new TRPCError({ code: 'UNAUTHORIZED' })
+
+	if (user.role !== UserRole.ADMIN)
+		throw new TRPCError({ code: 'FORBIDDEN' })
 
 	// TODO: Recording activity
 	// const start = Date.now()
