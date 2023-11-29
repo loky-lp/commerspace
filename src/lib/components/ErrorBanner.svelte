@@ -3,9 +3,9 @@
 	import type { Router } from '$lib/trpc/routers'
 
 	import { ExclamationCircleOutline } from 'flowbite-svelte-icons'
-	import { getErrorInfo, } from '$lib/utils/error'
+	import { type ErrorInfo, getErrorInfo } from '$lib/utils/error'
 
-	export let error: Error | TRPCClientError<Router>
+	export let error: ErrorInfo | Error | TRPCClientError<Router>
 	$: info = getErrorInfo(error)
 </script>
 
