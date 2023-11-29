@@ -8,6 +8,7 @@ import Credentials from '@auth/core/providers/credentials'
 import { hash as makeHash, verify as verifyHash } from 'argon2'
 import { z } from 'zod'
 
+import { UserRole, UserStatus } from '@prisma/client'
 import type { User } from '$lib/prisma'
 import { prisma } from '$lib/prisma'
 
@@ -50,8 +51,6 @@ export const authHandle = SvelteKitAuth({
 				password: { label: 'Password', type: 'password', datatype: 'string' },
 			},
 			async authorize(credentials) {
-				console.log('credentials', credentials)
-
 				const zodParse = zCredentials.safeParse(credentials)
 				if (!zodParse.success) return null
 				const { email, password } = zodParse.data
@@ -67,40 +66,38 @@ export const authHandle = SvelteKitAuth({
 
 				if (!user || !user.credentials) return null
 
+				// The password check is not done in the `signIn` method below because Prisma with TS is shit
 				const loginAttempt = await checkPasswordHash(password, user.credentials.password)
 
 				if (!loginAttempt)
 					return null
-
-				console.log('user', user)
 
 				return user
 			},
 		}),
 	],
 	callbacks: {
-		async signIn({ user, account, credentials }) {
-			console.log('signin callback', user, account, credentials)
-			return true
+		async signIn({ user }) {
+			const u = user as User
+
+			// Return false if the user is banned or has been deleted
+			return !(u.status === UserStatus.BANNED || u.deletedAt)
 		},
 		// async redirect({ url, baseUrl }) {
 		// 	console.log('redirect callback', url, baseUrl)
 		// 	return baseUrl
 		// },
-		async session({ session, user, token }) {
-			console.log('session callback', session, user, token)
+		async session({ session, token }) {
 			return {
 				...session,
 				user: {
 					...session.user,
 					id: token.id as string,
-					role: token.role as string,
+					role: token.role as UserRole,
 				},
 			}
 		},
-		async jwt({ token, user, account, profile }) {
-			console.log('jwt callback', { token, user, account, profile })
-
+		async jwt({ token, user }) {
 			const u = user as User
 
 			// Whe the user is valid the user just logged in
@@ -109,7 +106,7 @@ export const authHandle = SvelteKitAuth({
 				return {
 					...token,
 					id: u.id,
-					role: u.role as string,
+					role: u.role,
 				}
 			}
 
