@@ -42,12 +42,12 @@
 
 	<form class="w-full grid gap-4" on:submit|preventDefault={handleSignUp}>
 		<FloatingLabelInput bind:value={email} id="email-input" name="email"
-												required style="outlined" type="email"
+		                    required style="outlined" type="email"
 		>
 			Email
 		</FloatingLabelInput>
 		<FloatingLabelInput bind:value={password} id="password-input" name="password"
-												required style="outlined" type="password"
+		                    required style="outlined" type="password"
 		>
 			Password
 		</FloatingLabelInput>
