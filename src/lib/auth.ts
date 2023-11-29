@@ -41,7 +41,8 @@ export const authHandle = SvelteKitAuth({
 	// adapter: PrismaAdapter(prisma),
 	pages: {
 		signIn: '/signin',
-		// error: '',
+		// The error page is the same as the signIn because the signUp is handled by custom logic
+		error: '/signin',
 	},
 	providers: [
 		Credentials({

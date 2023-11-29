@@ -1,6 +1,9 @@
 <script lang="ts">
+	import { page } from '$app/stores'
+
 	import { Button, FloatingLabelInput, Spinner } from 'flowbite-svelte'
 	import { signIn } from '@auth/sveltekit/client'
+	import ErrorBanner from '$lib/components/ErrorBanner.svelte'
 
 	let loading: boolean
 	let email: string
@@ -9,7 +12,7 @@
 	async function handleSignIn() {
 		loading = true
 		try {
-			// TODO: Refine UX
+			// TODO Redirect to previous page
 			await signIn('credentials', { email, password, callbackUrl: '' })
 		} catch (e) {
 			console.error(e)
@@ -23,7 +26,12 @@
 <div class="max-w-screen-sm mx-auto grid gap-4 p-4">
 	<h1>Sign in</h1>
 
-	<form class="w-full grid gap-4" on:submit={handleSignIn}>
+
+	{#if $page.data.error}
+		<ErrorBanner error={{ name: '', description: 'Credenziali non valide' }} />
+	{/if}
+
+	<form class="w-full grid gap-4" on:submit|preventDefault={handleSignIn}>
 		<FloatingLabelInput bind:value={email} id="email-input" name="email"
 												required style="outlined" type="email"
 		>
@@ -42,7 +50,7 @@
 			{#if loading}
 				<Spinner class="mr-3" size="4" color="white" />
 			{/if}
-			Palla
+			Accedi
 		</Button>
 	</form>
 </div>
