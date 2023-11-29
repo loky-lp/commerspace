@@ -5,12 +5,12 @@
 		Dropdown,
 		DropdownDivider,
 		DropdownItem,
-		Navbar,
 		NavBrand,
 		NavHamburger,
 		NavLi,
 		NavUl,
 	} from 'flowbite-svelte'
+	import { AppNavBar } from '$lib/components'
 	import { page } from '$app/stores'
 	import { signOut } from '@auth/sveltekit/client'
 
@@ -18,7 +18,7 @@
 	$: user = $page.data.session?.user
 </script>
 
-<Navbar class="border-b-2">
+<AppNavBar>
 	<NavBrand href="/">
 		<img src="/favicon.png" class="mr-3 h-6 sm:h-9" alt="Commerspace Logo" />
 		<span class="self-center whitespace-nowrap text-xl font-semibold">Commerspace</span>
@@ -58,6 +58,6 @@
 		<NavLi href="/pricing">Pricing</NavLi>
 		<NavLi href="/contact">Contact</NavLi>
 	</NavUl>
-</Navbar>
+</AppNavBar>
 
 <slot />
