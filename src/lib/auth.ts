@@ -103,7 +103,6 @@ export const authHandle = SvelteKitAuth({
 
 			// Whe the user is valid the user just logged in
 			if (u) {
-				console.log(u.name)
 				return {
 					...token,
 					id: u.id,

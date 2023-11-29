@@ -12,8 +12,6 @@
 		greeting = await trpc($page).example.palla.query()
 		loading = false
 	}
-
-	console.log($page.data)
 </script>
 
 <h6>Loading data in<br /><code>+page.svelte</code></h6>
@@ -33,5 +31,5 @@
 			<Spinner size="4" color="white" />
 		</div>
 	{/if}
-	Palla
+	Carica
 </Button>
