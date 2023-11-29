@@ -9,6 +9,7 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "eslint .",
+		"vercel:build": "prisma generate && pnpm build",
 		"db:reset": "prisma db push --force-reset --accept-data-loss && prisma db seed"
 	},
 	"devDependencies": {
