@@ -1,4 +1,7 @@
-/** @type {import('tailwindcss').Config}*/
+import type { Config } from 'tailwindcss'
+
+import flowbite from 'flowbite/plugin'
+
 const config = {
 	content: [
 		'./src/**/*.{html,js,svelte,ts}',
@@ -30,8 +33,8 @@ const config = {
 	},
 
 	plugins: [
-		require('flowbite/plugin'),
+		flowbite,
 	],
-}
+} satisfies Config
 
-module.exports = config
+export default config
