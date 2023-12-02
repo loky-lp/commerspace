@@ -55,8 +55,8 @@
 				</a>
 			</svelte:fragment>
 
-			<!-- TODO Better centering, let the sides grow-->
 			<svelte:fragment>
+				<!-- TODO Better centering, let the sides grow-->
 				<div class="hidden rounded-full md:flex items-center gap-1 bg-surface-50-900-token p-2 border border-surface-300-600-token">
 					<span class="mx-3">field 1</span>
 					<span class="divider-vertical h-6" />
