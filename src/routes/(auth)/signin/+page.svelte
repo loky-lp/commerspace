@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/stores'
 
-	import { Button, FloatingLabelInput, Hr, Spinner } from 'flowbite-svelte'
-	import { AppleSolid, FacebookSolid, GoogleSolid } from 'flowbite-svelte-icons'
+	import { Spinner } from '$lib/components'
 	import { signIn } from '@auth/sveltekit/client'
-	import ErrorBanner from '$lib/components/ErrorBanner.svelte'
+	// import { AppleSolid, FacebookSolid, GoogleSolid } from 'flowbite-svelte-icons'
+	// import ErrorBanner from '$lib/components/ErrorBanner.svelte'
 
 	let loading: boolean
 	let email: string
@@ -29,43 +29,54 @@
 		Non hai ancora un account? <a href="/signup" class="font-semibold">Registrati</a>
 	</div>
 	<div class="flex-1 flex items-center justify-center">
-		<div class="w-[clamp(0px,50ch,100vw)] sm:w-[clamp(50ch,70ch,100vw)] mx-auto grid gap-4 p-4 border rounded-xl">
+		<div
+			class="w-[clamp(0px,50ch,100vw)] sm:w-[clamp(50ch,70ch,100vw)] mx-auto grid gap-4 p-4 card border-surface-300-600-token"
+		>
+			<!-- TODO Refine to use Skeleton style guides-->
 			<h1 class="text-2xl font-semibold">Benvenuto su commerspace</h1>
 
 			{#if $page.data.error}
-				<ErrorBanner error={{ name: '', description: 'Credenziali non valide' }} />
+				TODO Error
+				<!--<ErrorBanner error={{ name: '', description: 'Credenziali non valide' }} />-->
 			{/if}
 
 			<form class="w-full grid gap-4" on:submit|preventDefault={handleSignIn}>
-				<FloatingLabelInput bind:value={email} id="email-input" name="email"
-				                    required style="outlined" type="email"
+				<input required type="email" name="email" id="email-input" placeholder="Email" bind:value={email}
+				       class="input"
 				>
-					Email
-				</FloatingLabelInput>
-				<FloatingLabelInput bind:value={password} id="password-input" name="password"
-				                    required style="outlined" type="password"
+				<input required type="password" name="password" id="password-input" placeholder="Password" bind:value={password}
+				       class="input"
 				>
-					Password
-				</FloatingLabelInput>
 
 				<!-- Inserted only to allow submit from keyboard -->
 				<input class="hidden" type="submit">
 
-				<Button color={!loading ? 'primary' : 'alternative'} disabled={loading} on:click={handleSignIn} size="lg">
+				<button disabled={loading} type="submit"
+				        class="btn variant-filled-primary"
+				        class:variant-ghost-primary={loading}
+				>
 					{#if loading}
-						<Spinner class="mr-3" size="4" color="white" />
+						<Spinner class="mr-3" />
 					{/if}
 					Accedi
-				</Button>
+				</button>
 			</form>
 
-			<Hr hrClass="my-2 w-full" textSpanClass="font-light">
-				oppure
-			</Hr>
+			<div>TODO Socials</div>
 
-			<Button color="alternative">Accedi con <GoogleSolid class="ml-2"/></Button>
-			<Button color="alternative">Accedi con <FacebookSolid class="ml-2"/></Button>
-			<Button color="alternative">Accedi con <AppleSolid class="ml-2"/></Button>
+			<!--<Hr hrClass="my-2 w-full" textSpanClass="font-light">-->
+			<!--	oppure-->
+			<!--</Hr>-->
+
+			<!--<Button color="alternative">Accedi con-->
+			<!--	<GoogleSolid class="ml-2" />-->
+			<!--</Button>-->
+			<!--<Button color="alternative">Accedi con-->
+			<!--	<FacebookSolid class="ml-2" />-->
+			<!--</Button>-->
+			<!--<Button color="alternative">Accedi con-->
+			<!--	<AppleSolid class="ml-2" />-->
+			<!--</Button>-->
 		</div>
 	</div>
 </div>
