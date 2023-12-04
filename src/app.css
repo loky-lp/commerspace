@@ -34,10 +34,6 @@
 }
 
 @layer utilities {
-	.menu-icon {
-		@apply h-6 w-6 text-neutral-500;
-	}
-
 	.map-popup-hide-tip .maplibregl-popup-tip {
 		@apply hidden;
 	}

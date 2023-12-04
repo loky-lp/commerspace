@@ -1,121 +1,150 @@
 <script lang="ts">
-	import { derived } from 'svelte/store'
 	import { getLeftMenuOpen, setLeftMenuOpen } from '$lib/context'
 	import { NavItem } from '$lib/components'
 	import { page } from '$app/stores'
 
-	import {
-		BuildingOutline,
-		ChevronDoubleLeftOutline,
-		ChevronDoubleRightOutline,
-		UsersGroupOutline,
-		UsersOutline,
-	} from 'flowbite-svelte-icons'
-	import { Avatar, Dropdown, DropdownDivider, DropdownItem } from 'flowbite-svelte'
+	import type { PopupSettings } from '@skeletonlabs/skeleton'
+	import { AppShell, Avatar, storePopup, popup } from '@skeletonlabs/skeleton'
+	import { arrow, autoUpdate, computePosition, flip, offset, shift } from '@floating-ui/dom'
+	import { BadgeHelp, Building2, ChevronsLeftRight, ChevronsRightLeft, CircleUser, Users } from 'lucide-svelte'
 
-	// We know that the user is present for sure because we check it inside +layout.server
-	const user = derived(page, $p => $p.data!.session!.user)
+	// We know for sure that the user is present because we check it inside +layout.server
+	$: user = $page.data.session!.user
 
 	// TODO Store preference in localhost
 	let preferLeftMenuOpen = true
 
 	setLeftMenuOpen()
-	// TODO Don't collapse menu if userDropdown is open
-	const isOpen = getLeftMenuOpen()
-	let userDropdownOpen = false
+	const isMenuOpen = getLeftMenuOpen()
+	let isUserPopupOpen = false
 
 	function handleMenuEvent(e: MouseEvent | FocusEvent) {
-		if (preferLeftMenuOpen) return
+		if (preferLeftMenuOpen || isUserPopupOpen) return
 
 		// TODO implement focus and blur
 		if (e.type == 'mouseenter')
-			isOpen.set(true)
+			isMenuOpen.set(true)
 		if (e.type == 'mouseleave')
-			isOpen.set(false)
+			isMenuOpen.set(false)
 	}
+	$: openButtonText = preferLeftMenuOpen ? 'Comprimi menu' : 'Espandi menu'
 
 	// TODO Fetch the user menu visible voices
 
+	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow })
+
+	const userSettingsPopup: PopupSettings = {
+		event: 'click',
+		target: 'userSettingsPopup',
+		placement: 'right-end',
+		state: (e) => {
+			isUserPopupOpen = e.state
+			if (!e.state && !preferLeftMenuOpen)
+				isMenuOpen.set(false)
+		}
+	}
 </script>
 
-<div class="grid grid-cols-[auto_1fr] h-screen max-h-screen select-none">
+<AppShell
+	class="transition-transform"
+	slotSidebarLeft="border-r bg-surface-100-800-token border-surface-300-600-token"
+>
 	<!-- Nav menu -->
-	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	<div class="bg-neutral-100 border-r max-h-screen flex flex-col divide-y p-2"
-	     on:mouseenter={e => handleMenuEvent(e)}
-	     on:mouseleave={e => handleMenuEvent(e)}
-	>
-		<!-- Logo -->
-		<div class="flex items-center pb-2">
-			<img alt="Logo" class="w-10 h-10" src="/favicon.png">
-			{#if $isOpen}
-				<h1 class="text-2xl font-bold">Commerspace</h1>
-			{/if}
-		</div>
-
-		<!-- Menu -->
-		<nav class="flex-1 overflow-auto py-2">
-			<ul class="list-none">
-				<NavItem text="Utenti" click="/admin/user">
-					<UsersGroupOutline class="menu-icon" slot="icon" />
-				</NavItem>
-				<NavItem text="Host" click="/admin/host">
-					<UsersOutline class="menu-icon" slot="icon" />
-				</NavItem>
-				<NavItem text="Locations" click="/admin/location">
-					<BuildingOutline class="menu-icon" slot="icon" />
-				</NavItem>
-				<NavItem text="CLICK ME" click={() => alert('THE POWER OF THE CLICK FLOWS IN ME')} />
-			</ul>
-		</nav>
-
-		<!-- User Settings -->
-		<div class="py-1">
-			<button class="w-full py-1 hover:bg-neutral-200 transition-colors rounded-xl flex items-center">
-				<Avatar class="w-10 h-10" src={$user.image ?? undefined}>
-					{$user.name}
-				</Avatar>
-				{#if $isOpen}
-					<span class="px-2 truncate max-w-[15ch]">
-						{$user.name}
-					</span>
-				{/if}
-			</button>
-			<!-- This Dropdown is practically unusable, every style is applied to the core content and not the wrapper WTF -->
-			<!-- It also use it's own font style, ignoring the one use across the app -->
-			<Dropdown bind:open={userDropdownOpen} placement="right-end">
-				<div slot="header" class="px-4 py-2">
-					<span class="block">{$user.name}</span>
-					<span class="block truncate text-neutral-500">{$user.email}</span>
-				</div>
-				<DropdownItem>Dashboard</DropdownItem>
-				<DropdownDivider />
-				<DropdownItem>Settings</DropdownItem>
-				<DropdownItem>Earnings</DropdownItem>
-				<DropdownItem>Sign out</DropdownItem>
-			</Dropdown>
-		</div>
-
-		<!-- Menu control -->
-		<button class="p-2 pt-4 flex justify-start items-center gap-2"
-		        on:click={() => preferLeftMenuOpen = !preferLeftMenuOpen}
+	<svelte:fragment slot="sidebarLeft">
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
+		<!-- TODO: Add color utility token for divide -->
+		<div class="h-full flex flex-col divide-y p-2 divide-surface-300"
+		     on:mouseenter={e => handleMenuEvent(e)}
+		     on:mouseleave={e => handleMenuEvent(e)}
 		>
-			{#if preferLeftMenuOpen}
-				<ChevronDoubleLeftOutline class="menu-icon inline" />
-			{:else}
-				<ChevronDoubleRightOutline class="menu-icon inline" />
-			{/if}
-			{#if $isOpen}
-				{#if preferLeftMenuOpen}
-					Comprimi menu
-				{:else}
-					Espandi menu
+			<!-- Logo -->
+			<div class="flex items-center pb-2 select-none">
+				<img alt="Logo" class="w-10 h-10" src="/favicon.png">
+				{#if $isMenuOpen}
+					<h1 class="text-2xl font-bold">Commerspace</h1>
 				{/if}
-			{/if}
-		</button>
-	</div>
+			</div>
 
-	<div class="overflow-auto">
-		<slot />
-	</div>
-</div>
+			<!-- Menu -->
+			<nav class="flex-1 overflow-auto py-2">
+				<ul class="list-none">
+					<NavItem text="Utenti" click="/admin/user">
+						<Users slot="icon" />
+					</NavItem>
+					<NavItem text="Host" click="/admin/host">
+						<CircleUser slot="icon" />
+					</NavItem>
+					<NavItem text="Locations" click="/admin/location">
+						<Building2 slot="icon" />
+					</NavItem>
+					<NavItem text="Verifiche sospese" click="/admin/verify">
+						<BadgeHelp slot="icon" />
+					</NavItem>
+					<NavItem text="CLICK ME" click={() => alert('THE POWER OF THE CLICK FLOWS IN ME')} />
+				</ul>
+			</nav>
+
+			<!-- User Settings -->
+			<div class="pt-2 pb-1"> <!-- For some reason the Avatar inside create a shift of .25rem on the bottom -->
+				<button class="w-full btn p-0 justify-start bg-surface-hover-token" use:popup={userSettingsPopup}>
+					<!-- TODO Extract user initials -->
+					<Avatar background="bg-surface-300-600-token" class="border-token border-surface-300-600-token"
+					        initials="JD" src={user.image ?? undefined} width="w-10"
+					/>
+					{#if $isMenuOpen}
+					<span class="truncate max-w-[15ch]">
+						{user.name}
+					</span>
+					{/if}
+				</button>
+
+				<!-- User Settings Popup -->
+				<div class="w-max pl-2" data-popup="userSettingsPopup">
+					<div
+						class="rounded-token p-2 bg-surface-100-800-token border-token border-surface-300-600-token flex flex-col divide-y divide-surface-300"
+					>
+						<div class="flex items-center gap-2 pb-2">
+							<!-- TODO Extract user initials -->
+							<Avatar background="bg-surface-300-600-token" class="border-token border-surface-300-600-token"
+							        initials="JD" src={user.image ?? undefined} width="w-16 h-16"
+							/>
+							<div>
+								<span class="block">{user.name}</span>
+								<span class="block truncate text-surface-500-400-token">{user.email}</span>
+
+							</div>
+						</div>
+						<div class="py-2 flex flex-col">
+							<a class="btn hover:bg-surface-200-700-token justify-start" href="#TODO">Route 1</a>
+							<a class="btn hover:bg-surface-200-700-token justify-start" href="#TODO">Route 2</a>
+							<a class="btn hover:bg-surface-200-700-token justify-start" href="#TODO">Route 3</a>
+						</div>
+						<div class="pt-2 flex flex-col">
+							<a class="btn hover:bg-surface-200-700-token justify-start" href="#TODO">Logout</a>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Menu control -->
+			<div class="pt-2">
+				<button class="w-full btn bg-surface-hover-token justify-start gap-2 px-2"
+				        on:click={() => preferLeftMenuOpen = !preferLeftMenuOpen}
+				>
+					{#if preferLeftMenuOpen}
+						<ChevronsRightLeft />
+					{:else}
+						<ChevronsLeftRight />
+					{/if}
+					{#if $isMenuOpen}
+						{openButtonText}
+					{/if}
+				</button>
+			</div>
+		</div>
+	</svelte:fragment>
+
+	<!-- ---- / ---- -->
+	<slot />
+	<!-- ---- / ---- -->
+</AppShell>
