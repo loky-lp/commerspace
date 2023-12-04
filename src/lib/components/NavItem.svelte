@@ -14,7 +14,7 @@
 		this={typeof click === 'string' ? 'a' : 'button'}
 		href={typeof click === 'string' ? click : null}
 		on:click={typeof click === 'string' ? null : click}
-		class="w-full p-2 hover:bg-neutral-200 transition-colors rounded-xl flex justify-start items-center gap-2"
+		class="w-full btn bg-surface-hover-token justify-start gap-2 px-2"
 	>
 		<slot name="icon">
 			<!-- Text placeholder if icon is absent -->
