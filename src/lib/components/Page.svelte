@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { goBack } from '$lib/navigation'
-	import { ArrowLeftOutline } from 'flowbite-svelte-icons'
-	import { Button } from 'flowbite-svelte'
+	import { ArrowLeft } from 'lucide-svelte'
 
 	/**
 	 * The subtitle shown after the `title` slot
@@ -17,6 +16,8 @@
 	 * This is a prop and not a dispatched event because we have to check if it's defined or not.
 	 */
 	export let onBack: boolean | (() => void) | undefined = undefined
+
+	// TODO: Uniform utilization of svelte:fragment
 </script>
 
 {#if $$slots.header}
@@ -28,9 +29,9 @@
 {#if onBack || $$slots.avatar || $$slots.title || $$slots.extra}
 	<div class="flex mb-4 items-center gap-2">
 		{#if onBack}
-			<Button pill color="alternative" class="!p-2 !ring-0" on:click={onBack === true ? () => goBack() : onBack}>
-				<ArrowLeftOutline />
-			</Button>
+			<button class="btn-icon btn-icon-sm bg-surface-hover-token" on:click={onBack === true ? () => goBack() : onBack}>
+				<ArrowLeft />
+			</button>
 		{/if}
 		{#if $$slots.avatar}
 			<div>
@@ -46,9 +47,7 @@
 			{/if}
 		</div>
 		{#if $$slots.extra}
-			<div>
-				<slot name="extra" />
-			</div>
+			<slot name="extra" />
 		{/if}
 	</div>
 {/if}
