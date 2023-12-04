@@ -1,4 +1,5 @@
 export { default as AppNavBar } from './AppNavBar.svelte'
+export { default as ErrorBanner } from './ErrorBanner.svelte'
 export { default as LoadingPlaceholder } from './LoadingPlaceholder.svelte'
 export { default as NavItem } from './NavItem.svelte'
 export { default as Page } from './Page.svelte'

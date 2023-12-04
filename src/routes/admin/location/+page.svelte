@@ -3,10 +3,9 @@
 	import { page } from '$app/stores'
 	import { useAsyncDataOnMount } from '$lib/utils'
 
-	import { LoadingPlaceholder, Page } from '$lib/components'
+	import { ErrorBanner, LoadingPlaceholder, Page } from '$lib/components'
 	import { Avatar, Button } from 'flowbite-svelte'
 	import { RotateOutline } from 'flowbite-svelte-icons'
-	import ErrorBanner from '$lib/components/ErrorBanner.svelte'
 
 	const { data, loading, error, refresh } = useAsyncDataOnMount(() => trpc($page).example.hello.query({ name: 'test from lazy' }))
 

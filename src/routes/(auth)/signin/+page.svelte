@@ -1,10 +1,9 @@
 <script lang="ts">
 	import { page } from '$app/stores'
 
-	import { Spinner } from '$lib/components'
+	import { ErrorBanner, Spinner } from '$lib/components'
 	import { signIn } from '@auth/sveltekit/client'
 	// import { AppleSolid, FacebookSolid, GoogleSolid } from 'flowbite-svelte-icons'
-	// import ErrorBanner from '$lib/components/ErrorBanner.svelte'
 
 	let loading: boolean
 	let email: string
@@ -36,8 +35,7 @@
 			<h1 class="text-2xl font-semibold">Benvenuto su commerspace</h1>
 
 			{#if $page.data.error}
-				TODO Error
-				<!--<ErrorBanner error={{ name: '', description: 'Credenziali non valide' }} />-->
+				<ErrorBanner error={{ name: '', description: 'Credenziali non valide' }} />
 			{/if}
 
 			<form class="w-full grid gap-4" on:submit|preventDefault={handleSignIn}>
