@@ -4,8 +4,8 @@
 	import { useAsyncDataOnMount } from '$lib/utils'
 
 	import { ErrorBanner, LoadingPlaceholder, Page } from '$lib/components'
-	import { Avatar, Button } from 'flowbite-svelte'
-	import { RotateOutline } from 'flowbite-svelte-icons'
+	import { Avatar } from '@skeletonlabs/skeleton'
+	import { RefreshCw } from 'lucide-svelte'
 
 	const { data, loading, error, refresh } = useAsyncDataOnMount(() => trpc($page).example.hello.query({ name: 'test from lazy' }))
 
@@ -16,15 +16,19 @@
 		<ErrorBanner error={$error} />
 	{:else}
 		<Page onBack subtitle="subtitle">
-			<div slot="header">header</div>
+			<svelte:fragment slot="header">
+				header
+			</svelte:fragment>
 			<span slot="title">Gestione location</span>
-			<Avatar slot="avatar" src="https://cdnimg103.lizhi.fm/user/2017/02/04/2583325032200238082_160x160.jpg" />
+			<svelte:fragment slot="avatar">
+				<Avatar src="https://cdnimg103.lizhi.fm/user/2017/02/04/2583325032200238082_160x160.jpg" width="w-10" />
+			</svelte:fragment>
 			<div slot="extra" class="flex">
-				<Button pill color="alternative" class="!p-2 !ring-0" disabled={$loading} on:click={refresh}>
+				<button class="btn-icon btn-icon-sm bg-surface-hover-token" disabled={$loading} on:click={refresh}>
 					<span class:animate-spin={$loading}>
-						<RotateOutline />
+						<RefreshCw />
 					</span>
-				</Button>
+				</button>
 			</div>
 			{#if $loading}
 				<LoadingPlaceholder />
