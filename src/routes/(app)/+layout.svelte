@@ -11,7 +11,9 @@
 	// 	NavUl,
 	// } from 'flowbite-svelte'
 	// import { AppNavBar } from '$lib/components'
-	import { AppBar, AppShell, Avatar, Drawer, getDrawerStore } from '@skeletonlabs/skeleton'
+	import type { PopupSettings } from '@skeletonlabs/skeleton'
+	import { AppBar, AppShell, Avatar, Drawer, getDrawerStore, storePopup, popup } from '@skeletonlabs/skeleton'
+	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom'
 	import { page } from '$app/stores'
 	// import { signOut } from '@auth/sveltekit/client'
 
@@ -26,6 +28,14 @@
 	}
 	function drawerClose(): void {
 		drawerStore.close();
+	}
+
+	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow })
+
+	const popupClick: PopupSettings = {
+		event: 'click',
+		target: 'popupClick',
+		placement: 'bottom-end',
 	}
 </script>
 
@@ -77,9 +87,26 @@
 						</span>
 				</button>
 				{#if user}
-					<!-- TODO Extract user initials, Add Dropdown menu -->
-					<Avatar src={user.image ?? undefined} initials="JD" width="w-10" background="bg-primary-500"
-					        class="cursor-pointer ring-1 ring-surface-300-600-token hover:ring-4 hover:ring-primary-500 transition-all"/>
+					<div class="inline-block" use:popup={popupClick}>
+					<!-- TODO Extract user initials -->
+						<Avatar src={user.image ?? undefined} initials="JD" width="w-10" background="bg-primary-500"
+						        class="cursor-pointer ring-1 ring-surface-300-600-token hover:ring-4 hover:ring-primary-500 transition-all"
+						/>
+					</div>
+
+					<div class="w-max px-2" data-popup="popupClick">
+						<div class="card bg-surface-50-900-token flex flex-col gap-1 p-2">
+							<a href="#TODO" class="chip chip-menu hover:bg-surface-200-700-token ">Route 1</a>
+							<a href="#TODO" class="chip chip-menu hover:bg-surface-200-700-token ">Route 2</a>
+							<a href="#TODO" class="chip chip-menu hover:bg-surface-200-700-token ">Route 3</a>
+							{#if user.role === 'ADMIN'}
+								<hr class="!border-surface-100-800-token">
+								<a href="#TODO" class="chip chip-menu hover:bg-surface-200-700-token ">
+									Admin or host link
+								</a>
+							{/if}
+						</div>
+					</div>
 				{:else}
 					<div class="hidden md:flex items-center gap-3">
 						<a href="/signin" class="btn variant-ringed-primary">Accedi</a>
