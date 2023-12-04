@@ -17,6 +17,7 @@
 		"@auth/prisma-adapter": "^1.0.5",
 		"@auth/sveltekit": "^0.3.11",
 		"@faker-js/faker": "^8.3.1",
+		"@floating-ui/dom": "^1.5.3",
 		"@fontsource-variable/roboto-condensed": "^5.0.1",
 		"@prisma/client": "^5.5.2",
 		"@skeletonlabs/skeleton": "^2.5.1",
