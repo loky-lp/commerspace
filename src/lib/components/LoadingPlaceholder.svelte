@@ -1,7 +1,7 @@
 <script>
-	import { Spinner } from 'flowbite-svelte'
+	import { Spinner } from '$lib/components'
 </script>
 
 <div class="h-[60vh] flex justify-center items-center">
-	<Spinner size="20" />
+	<Spinner class="!w-20" />
 </div>
