@@ -3,7 +3,6 @@
 	import { trpc } from '$lib/trpc/client'
 	import { isTRPCClientError } from '$lib/utils/error'
 
-	// import { AppleSolid, FacebookSolid, GoogleSolid } from 'flowbite-svelte-icons'
 	import { ErrorBanner, Spinner } from '$lib/components'
 	import { signIn } from '@auth/sveltekit/client'
 
@@ -69,14 +68,6 @@
 					Accedi
 				</button>
 			</form>
-
-			<!--<Hr hrClass="my-2 w-full" textSpanClass="font-light">-->
-			<!--	oppure-->
-			<!--</Hr>-->
-
-			<!--<Button color="alternative">Accedi con <GoogleSolid class="ml-2"/></Button>-->
-			<!--<Button color="alternative" class="border-blue-500">Accedi con <FacebookSolid class="ml-2"/></Button>-->
-			<!--<Button color="alternative" class="border-neutral-800">Accedi con <AppleSolid class="ml-2"/></Button>-->
 		</div>
 	</div>
 </div>

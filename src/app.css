@@ -26,11 +26,6 @@
 	.map-popup-place-content .maplibregl-popup-content {
 		@apply bg-green-500 p-0 rounded-xl overflow-hidden;
 	}
-
-	.chip-menu {
-		@apply justify-start text-base;
-		border-radius: var(--theme-rounded-base);
-	}
 }
 
 @layer utilities {

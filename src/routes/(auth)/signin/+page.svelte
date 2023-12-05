@@ -3,7 +3,6 @@
 
 	import { ErrorBanner, Spinner } from '$lib/components'
 	import { signIn } from '@auth/sveltekit/client'
-	// import { AppleSolid, FacebookSolid, GoogleSolid } from 'flowbite-svelte-icons'
 
 	let loading: boolean
 	let email: string
@@ -61,20 +60,6 @@
 			</form>
 
 			<div>TODO Socials</div>
-
-			<!--<Hr hrClass="my-2 w-full" textSpanClass="font-light">-->
-			<!--	oppure-->
-			<!--</Hr>-->
-
-			<!--<Button color="alternative">Accedi con-->
-			<!--	<GoogleSolid class="ml-2" />-->
-			<!--</Button>-->
-			<!--<Button color="alternative">Accedi con-->
-			<!--	<FacebookSolid class="ml-2" />-->
-			<!--</Button>-->
-			<!--<Button color="alternative">Accedi con-->
-			<!--	<AppleSolid class="ml-2" />-->
-			<!--</Button>-->
 		</div>
 	</div>
 </div>

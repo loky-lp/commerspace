@@ -1,23 +1,23 @@
 <script lang="ts">
-	import { useAsyncDataOnMount } from '$lib/utils'
-	import { trpc } from '$lib/trpc/client'
-	import { page } from '$app/stores'
+	// import { useAsyncDataOnMount } from '$lib/utils'
+	// import { trpc } from '$lib/trpc/client'
+	// import { page } from '$app/stores'
 
-	const {
-		data: locationTypes,
-		loading: typesLoading,
-		error: typesError,
-		refresh: typesRefresh,
-	} = useAsyncDataOnMount(() => trpc($page).example.hello.query({ name: 'test from lazy' })) // TODO Correct path
-
-	const {
-		data: locations,
-		loading: locationLoading,
-		error: locationError,
-		refresh: locationRefresh,
-	} = useAsyncDataOnMount(() => trpc($page).example.hello.query({ name: 'test from lazy' })) // TODO Correct path
-
-	$: loading = $typesLoading || $locationLoading
+	// const {
+	// 	data: locationTypes,
+	// 	loading: typesLoading,
+	// 	error: typesError,
+	// 	refresh: typesRefresh,
+	// } = useAsyncDataOnMount(() => trpc($page).example.hello.query({ name: 'test from lazy' })) // TODO Correct path
+	//
+	// const {
+	// 	data: locations,
+	// 	loading: locationLoading,
+	// 	error: locationError,
+	// 	refresh: locationRefresh,
+	// } = useAsyncDataOnMount(() => trpc($page).example.hello.query({ name: 'test from lazy' })) // TODO Correct path
+	//
+	// $: loading = $typesLoading || $locationLoading
 
 	let typesSlider: HTMLElement
 
@@ -38,7 +38,7 @@
 <button on:click={() => typesSlider.scrollBy({ top: 0, left: -typesSlider.offsetWidth, behavior: 'smooth' })}>
 	Sinistra
 </button>
-<button on:click={() => typesSlider.scrollBy({ top: 0, left: -typesSlider.offsetWidth, behavior: 'smooth' })}>
+<button on:click={() => typesSlider.scrollBy({ top: 0, left: typesSlider.offsetWidth, behavior: 'smooth' })}>
 	Destra
 </button>
 <nav bind:this={typesSlider}
