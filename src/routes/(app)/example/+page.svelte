@@ -2,7 +2,7 @@
 	import { slide } from 'svelte/transition'
 	import { page } from '$app/stores'
 	import { trpc } from '$lib/trpc/client'
-	import { Button, Spinner } from 'flowbite-svelte'
+	import { Spinner } from '$lib/components'
 
 	let greeting = 'press the button to load data'
 	let loading = false
@@ -25,11 +25,13 @@
 >Load</a>
 <p>{greeting}</p>
 
-<Button color={!loading ? 'primary' : 'alternative'} disabled={loading} on:click={loadData}>
+<button class="btn {loading ? 'variant-ghost-primary' : 'variant-filled-primary'}"
+        disabled={loading} on:click={loadData}
+>
 	{#if loading}
 		<div transition:slide={{ axis: 'x' }} class="mr-3">
-			<Spinner size="4" color="white" />
+			<Spinner class="!w-6" />
 		</div>
 	{/if}
 	Carica
-</Button>
+</button>
