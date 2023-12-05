@@ -12,8 +12,8 @@
 	// } from 'flowbite-svelte'
 	// import { AppNavBar } from '$lib/components'
 	import type { PopupSettings } from '@skeletonlabs/skeleton'
-	import { AppBar, AppShell, Avatar, Drawer, getDrawerStore, storePopup, popup } from '@skeletonlabs/skeleton'
-	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom'
+	import { AppBar, AppShell, Avatar, Drawer, getDrawerStore, popup, storePopup } from '@skeletonlabs/skeleton'
+	import { arrow, autoUpdate, computePosition, flip, offset, shift } from '@floating-ui/dom'
 	import { page } from '$app/stores'
 	// import { signOut } from '@auth/sveltekit/client'
 
@@ -24,10 +24,11 @@
 	$: positionClasses = $drawerStore.open ? '-translate-x-[10%]' : ''
 
 	function drawerOpen(): void {
-		drawerStore.open({})
+		drawerStore.open()
 	}
+
 	function drawerClose(): void {
-		drawerStore.close();
+		drawerStore.close()
 	}
 
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow })
@@ -59,15 +60,17 @@
 	<svelte:fragment slot="header">
 		<AppBar slotDefault="flex justify-center">
 			<svelte:fragment slot="lead">
-				<a href="/" class="flex items-center gap-3">
-					<img src="/favicon.png" class="h-6 sm:h-9" alt="Commerspace Logo" />
+				<a class="flex items-center gap-3" href="/">
+					<img alt="Commerspace Logo" class="h-6 sm:h-9" src="/favicon.png" />
 					<span class="self-center whitespace-nowrap text-xl font-semibold">Commerspace</span>
 				</a>
 			</svelte:fragment>
 
 			<svelte:fragment>
 				<!-- TODO Better centering, let the sides grow-->
-				<div class="hidden rounded-full md:flex items-center gap-1 bg-surface-50-900-token p-2 border border-surface-300-600-token">
+				<div
+					class="hidden rounded-full md:flex items-center gap-1 bg-surface-50-900-token p-2 border border-surface-300-600-token"
+				>
 					<span class="mx-3">field 1</span>
 					<span class="divider-vertical h-6" />
 					<span class="mx-3">field 2</span>
@@ -79,16 +82,16 @@
 				<!-- TODO Refine -->
 				<button class="md:hidden btn btn-sm" on:click={drawerOpen}>
 						<span>
-							<svg class="fill-token w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 14">
-								<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-								      d="M1 1h15M1 7h15M1 13h15"
+							<svg class="fill-token w-4 h-4" viewBox="0 0 17 14" xmlns="http://www.w3.org/2000/svg">
+								<path d="M1 1h15M1 7h15M1 13h15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+								      stroke-width="2"
 								/>
 							</svg>
 						</span>
 				</button>
 				{#if user}
 					<div class="inline-block" use:popup={popupClick}>
-					<!-- TODO Extract user initials -->
+						<!-- TODO Extract user initials -->
 						<Avatar src={user.image ?? undefined} initials="JD" width="w-10" background="bg-primary-500"
 						        class="cursor-pointer ring-1 ring-surface-300-600-token hover:ring-4 hover:ring-primary-500 transition-all"
 						/>
@@ -96,12 +99,12 @@
 
 					<div class="w-max px-2" data-popup="popupClick">
 						<div class="card bg-surface-50-900-token flex flex-col gap-1 p-2">
-							<a href="#TODO" class="chip chip-menu hover:bg-surface-200-700-token ">Route 1</a>
-							<a href="#TODO" class="chip chip-menu hover:bg-surface-200-700-token ">Route 2</a>
-							<a href="#TODO" class="chip chip-menu hover:bg-surface-200-700-token ">Route 3</a>
+							<a href="#TODO" class="btn hover:bg-surface-200-700-token ">Route 1</a>
+							<a href="#TODO" class="btn hover:bg-surface-200-700-token ">Route 2</a>
+							<a href="#TODO" class="btn hover:bg-surface-200-700-token ">Route 3</a>
 							{#if user.role === 'ADMIN'}
 								<hr class="!border-surface-100-800-token">
-								<a href="#TODO" class="chip chip-menu hover:bg-surface-200-700-token ">
+								<a href="#TODO" class="btn hover:bg-surface-200-700-token ">
 									Admin or host link
 								</a>
 							{/if}

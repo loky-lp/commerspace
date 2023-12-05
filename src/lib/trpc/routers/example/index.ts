@@ -8,13 +8,13 @@ export type ExampleRouterOutputs = inferRouterOutputs<ExampleRouter>
 
 export const exampleRouter = router({
 	palla: protectedProcedure
-		.query(async ({ ctx: { user },  }) => {
+		.query(async ({ ctx: { user } }) => {
 			// console.log('trpc context', ctx)
 
 			const u = await prisma.user.findUnique({
 				where: {
-					id: user.id
-				}
+					id: user.id,
+				},
 			})
 
 			console.log('user', u)
