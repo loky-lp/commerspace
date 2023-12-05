@@ -8,7 +8,7 @@
 	import { arrow, autoUpdate, computePosition, flip, offset, shift } from '@floating-ui/dom'
 	import { BadgeHelp, Building2, ChevronsLeftRight, ChevronsRightLeft, CircleUser, Users } from 'lucide-svelte'
 
-	// We know for sure that the user is present because we check it inside +layout.server
+	// We know for sure that the user is present because we check it inside hooks.server
 	$: user = $page.data.session!.user
 
 	// TODO Store preference in localhost
