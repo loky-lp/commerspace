@@ -41,7 +41,9 @@ export function useAsyncDataOnMount<T>(fn: () => Promise<T>) {
 		data: readonly(data),
 		loading: readonly(loading),
 		error: readonly(error),
-		refresh: () => refreshTrigger.set(true),
+		refresh() {
+			refreshTrigger.set(true)
+		},
 	}
 }
 
