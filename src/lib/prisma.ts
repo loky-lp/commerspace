@@ -1,4 +1,5 @@
 import { Prisma, PrismaClient } from '@prisma/client'
+import Tsquery from 'pg-tsquery'
 
 import type { User as PrismaUser } from '@prisma/client'
 
@@ -46,3 +47,17 @@ export type UserWhereInput = Omit<Prisma.UserWhereInput, 'AND' | 'OR' | 'NOT'> &
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<UserWhereInput, "id" | "email" | "createdAt">
+
+/**
+ * Text-Search parser for PostgreSQL
+ */
+export function tsQuery(query: string | null | undefined): string | undefined {
+	const normalizedQuery = (typeof query === 'string' ? query : '').trim().replace(/\s+/g, ' ').replace(/\s/g, '*')
+	if (normalizedQuery) {
+		const parser = Tsquery()
+
+		return parser(`*${normalizedQuery}*`)
+	}
+
+	return undefined
+}
