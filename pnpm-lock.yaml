@@ -71,6 +71,9 @@ devDependencies:
   package:
     specifier: ^1.0.1
     version: 1.0.1
+  pg-tsquery:
+    specifier: ^8.4.1
+    version: 8.4.1
   postcss:
     specifier: ^8.4.24
     version: 8.4.31
@@ -2459,6 +2462,11 @@ packages:
       '@types/estree': 1.0.4
       estree-walker: 3.0.3
       is-reference: 3.0.2
+    dev: true
+
+  /pg-tsquery@8.4.1:
+    resolution: {integrity: sha512-GoeRhw6o4Bpt7awdUwHq6ITOw40IWSrb5IC2qR6dF9ZECtHFGdSpnjHOl9Rumd8Rx12kLI2T9TGV0gvxD5pFgA==}
+    engines: {node: '>=10'}
     dev: true
 
   /picocolors@1.0.0:

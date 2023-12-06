@@ -2,6 +2,9 @@ import { Prisma, PrismaClient } from '@prisma/client'
 
 import type { User as PrismaUser } from '@prisma/client'
 
+// TODO: Remove references to '@prisma/client' across the repo
+export * from '@prisma/client'
+
 // Prisma is basically unusable, we need to either re-export manually or create a manual type inference
 export type PrismaClientEx = ReturnType<typeof extendPrisma>
 
@@ -31,3 +34,15 @@ export function createPrismaClient(options?: Prisma.PrismaClientOptions): Prisma
 }
 
 export const prisma = createPrismaClient()
+
+export type UserWhereInput = Omit<Prisma.UserWhereInput, 'AND' | 'OR' | 'NOT'> & {
+	// Prisma overrides
+	AND?: UserWhereInput | UserWhereInput[]
+	OR?: UserWhereInput[]
+	NOT?: UserWhereInput | UserWhereInput[]
+
+	// Custom properties
+	name?: Prisma.StringNullableFilter<"User"> | string | null
+}
+
+export type UserWhereUniqueInput = Prisma.AtLeast<UserWhereInput, "id" | "email" | "createdAt">
