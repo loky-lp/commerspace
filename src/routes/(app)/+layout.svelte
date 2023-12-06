@@ -3,7 +3,7 @@
 	import { AppBar, AppShell, Avatar, Drawer, getDrawerStore, popup, storePopup } from '@skeletonlabs/skeleton'
 	import { arrow, autoUpdate, computePosition, flip, offset, shift } from '@floating-ui/dom'
 	import { page } from '$app/stores'
-	// import { signOut } from '@auth/sveltekit/client'
+	import { signOut } from '@auth/sveltekit/client'
 
 	// $: activeUrl = $page.url.pathname
 	$: user = $page.data.session?.user
@@ -86,16 +86,26 @@
 					</div>
 
 					<div class="w-max px-2" data-popup="popupClick">
-						<div class="card bg-surface-50-900-token flex flex-col gap-1 p-2">
+						<div class="card bg-surface-50-900-token flex flex-col p-2">
 							<a href="#TODO" class="btn hover:bg-surface-200-700-token ">Route 1</a>
 							<a href="#TODO" class="btn hover:bg-surface-200-700-token ">Route 2</a>
 							<a href="#TODO" class="btn hover:bg-surface-200-700-token ">Route 3</a>
 							{#if user.role === 'ADMIN'}
-								<hr class="!border-surface-100-800-token">
-								<a href="#TODO" class="btn hover:bg-surface-200-700-token ">
-									Admin or host link
+								<hr class="!border-surface-100-800-token my-2">
+								<a href="/admin" class="btn hover:bg-surface-200-700-token ">
+									Sezione admin
 								</a>
 							{/if}
+							{#if user.role === 'HOST'}
+								<hr class="!border-surface-100-800-token my-2">
+								<a href="/host" class="btn hover:bg-surface-200-700-token ">
+									Dashboard privata
+								</a>
+							{/if}
+							<hr class="!border-surface-100-800-token my-2">
+							<button class="btn justify-start hover:bg-surface-200-700-token" on:click={() => signOut()}>
+								Esci
+							</button>
 						</div>
 					</div>
 				{:else}
