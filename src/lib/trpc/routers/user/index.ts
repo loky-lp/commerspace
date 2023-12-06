@@ -3,7 +3,6 @@ import type { inferRouterInputs, inferRouterOutputs } from '@trpc/server'
 // import { TRPCError } from '@trpc/server'
 import { prisma, Prisma, tsQuery, UserRole, UserStatus, type UserWhereInput } from '$lib/prisma'
 import { z } from 'zod'
-import { singleLine } from '$lib/zod'
 
 export type UserRouter = typeof userRouter
 export type UserRouterInputs = inferRouterInputs<UserRouter>
@@ -18,11 +17,11 @@ export const userRouter = router({
 			z.object({
 				role: z.enum(userRoles).optional(),
 				status: z.enum(userStatuses).optional(),
-				query: singleLine(z.string().trim()),
+				query: z.string(), // TODO: Create custom zod schema to replace singleLine and trim
 
 				//
-				page: z.number().int().positive().min(1),
-				pageSize: z.number().int().positive().min(1).max(100),
+				page: z.number().int().min(0),
+				limit: z.number().int().positive().min(1).max(100),
 
 				//
 				orderBy: z
@@ -44,7 +43,7 @@ export const userRouter = router({
 			})
 		)
 		.query(async ({ input}) => {
-			const { role: _role, status: _status, query, page, pageSize, orderBy } = input
+			const { role: _role, status: _status, query, page, limit, orderBy } = input
 
 			const where: UserWhereInput = {
 				deletedAt: null,
@@ -65,19 +64,19 @@ export const userRouter = router({
 				]
 			}
 
-			const [itemCount, items] = await prisma.$transaction([
+			const [size, items] = await prisma.$transaction([
 				prisma.user.count({ where }),
 				prisma.user.findMany({
-					skip: (page - 1) * pageSize,
-					take: pageSize,
+					skip: page * limit,
+					take: limit,
 					orderBy,
 					where,
 				}),
 			])
 
 			return {
-				itemCount,
-				pageSize,
+				size,
+				limit,
 				page,
 				items,
 			}
