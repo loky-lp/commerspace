@@ -30,6 +30,6 @@ pnpm run dev
 ## Optional: Generate a secret for local authentication
 
 ```sh
-openssl rand -base64 32
+openssl rand -hex 32
 ```
 And set it as the `AUTH_SECRET` variable
