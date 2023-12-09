@@ -26,6 +26,60 @@
 	.map-popup-place-content .maplibregl-popup-content {
 		@apply bg-green-500 p-0 rounded-xl overflow-hidden;
 	}
+
+	.cm-table {
+		@apply w-full table-auto
+			/* TODO Test overflow */
+		overflow-hidden
+		bg-surface-100-800-token
+		rounded-token
+		bg-red-500;
+
+		/* Because Skeleton UI are geniuses that create the .table class */
+		display: table;
+	}
+
+	.cm-table thead {
+		@apply bg-surface-200-700-token border-surface-500/20;
+		border-width: 0 0 var(--theme-border-base) 0;
+	}
+
+	.cm-table tbody {
+		@apply text-sm divide-y divide-surface-500/20;
+	}
+
+	.cm-table th {
+		@apply p-2;
+	}
+
+	.cm-table tbody td {
+		@apply py-1 px-2;
+	}
+
+	.cm-table tbody tr:nth-child(even) {
+		@apply bg-surface-500/5;
+	}
+
+	.cm-table.interactive tbody tr:not(.cm-table-loading) {
+		@apply cursor-pointer;
+	}
+
+	.cm-table.interactive tbody tr:hover {
+		@apply bg-primary-500/10;
+	}
+
+	.cm-table-loading {
+		@apply bg-surface-100-800-token;
+	}
+
+	.cm-table tfoot {
+		@apply bg-surface-200-700-token border-surface-500/20;
+		border-width: var(--theme-border-base) 0 0 0;
+	}
+
+	.cm-table tfoot td {
+		@apply p-2;
+	}
 }
 
 @layer utilities {

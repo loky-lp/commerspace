@@ -1,14 +1,15 @@
 <script lang="ts">
-	import type { inferRouterInputs } from '@trpc/server'
+	import type { inferRouterInputs, inferRouterOutputs } from '@trpc/server'
 	import type { UserRouter } from '$lib/trpc/routers/user'
 	import { trpc } from '$lib/trpc/client'
 	import { page } from '$app/stores'
 	import { createPagination, useAsyncDataOnMount } from '$lib/utils'
 
+	import { derived, get, writable } from 'svelte/store'
 	import { Paginator } from '@skeletonlabs/skeleton'
 	import { ErrorBanner, LoadingPlaceholder, Page, RefreshButton } from '$lib/components'
-	import { get, writable } from 'svelte/store'
-	
+	import { Search, Trash2 } from 'lucide-svelte'
+
 	const filters = writable<inferRouterInputs<UserRouter>['paginate']>({
 			page: 0,
 			limit: 25,
@@ -16,10 +17,27 @@
 			orderBy: {},
 	})
 
+	type ArrayElement<A extends readonly unknown[]> = A extends readonly (infer E)[] ? E : never;
+
+	type User = ArrayElement<inferRouterOutputs<UserRouter>['paginate']['items']>
+
 	const { data, loading, error, refresh } = useAsyncDataOnMount(() => trpc($page).user.paginate.query(get(filters)))
 
-	const { paginationSettingsStore, onAmountChange, onPageChange} = createPagination(filters, data, refresh)
+	const { paginationSettingsStore, onAmountChange, onPageChange } = createPagination(filters, data, refresh)
 	$: paginationSettings = $paginationSettingsStore
+
+	const rows = derived(data, $d => $d?.items ?? [])
+
+	function onSelected(user: User) {
+		console.log('row selected', user)
+	}
+	function onInfo(user: User) {
+		console.log('user info', user)
+	}
+
+	function onDelete(user: User) {
+		console.log('user delete', user)
+	}
 </script>
 
 <section class="p-2 sm:p-4">
@@ -31,19 +49,68 @@
 			<div slot="extra" class="flex">
 				<RefreshButton {loading} {refresh} />
 			</div>
-			{#if $loading}
-				<LoadingPlaceholder />
-			{:else}
-				Pagina degli utenti
-				<Paginator
-					bind:settings={paginationSettings}
-					showFirstLastButtons
-					showPreviousNextButtons
-					on:page={onPageChange}
-					on:amount={onAmountChange}
-				/>
-				<pre><code>{JSON.stringify($data, null, 2)}</code></pre>
-			{/if}
+
+			<svelte:fragment>
+				<table class="cm-table interactive">
+					<thead>
+					<tr>
+						<th>Nome</th>
+						<th>Email</th>
+						<th />
+					</tr>
+					</thead>
+					{#if $loading}
+						<tr class="cm-table-loading">
+							<td colspan="999">
+								<LoadingPlaceholder />
+							</td>
+						</tr>
+					{:else if $error}
+						<tr class="cm-table-loading">
+							<td colspan="999" class="p-4">
+								<ErrorBanner error={{ name: '', description: 'Qualcosa è andato storto' }} />
+							</td>
+						</tr>
+					{:else}
+						<tbody>
+						{#each $rows as row}
+							<tr on:click={() => onSelected(row)}>
+								<td>{row.name}</td>
+								<td>{row.email}</td>
+								<td>
+									<div class="flex gap-1">
+										<button class="btn-icon btn-icon-sm variant-filled-secondary"
+										        on:click|stopPropagation={() => onInfo(row)}
+										>
+											<Search />
+										</button>
+										<button class="btn-icon btn-icon-sm variant-filled-error"
+										        on:click|stopPropagation={() => onDelete(row)}
+										>
+											<Trash2 />
+										</button>
+									</div>
+								</td>
+							</tr>
+						{/each}
+						</tbody>
+					{/if}
+					<tfoot>
+					<tr>
+						<td colspan="999">
+							<Paginator
+								bind:settings={paginationSettings}
+								showFirstLastButtons
+								showPreviousNextButtons
+								on:page={onPageChange}
+								on:amount={onAmountChange}
+								disabled={$loading}
+							/>
+						</td>
+					</tr>
+					</tfoot>
+				</table>
+			</svelte:fragment>
 		</Page>
 	{/if}
 </section>
