@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from '@prisma/client'
+import { Prisma, PrismaClient, UserRole, UserStatus } from '@prisma/client'
 import Tsquery from 'pg-tsquery'
 
 import type { User as PrismaUser } from '@prisma/client'
@@ -47,6 +47,14 @@ export type UserWhereInput = Omit<Prisma.UserWhereInput, 'AND' | 'OR' | 'NOT'> &
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<UserWhereInput, "id" | "email" | "createdAt">
+
+// region Utility constants
+
+export const userRoles = Object.values(UserRole) as [keyof typeof UserRole, ...(keyof typeof UserRole)[]]
+export const userStatuses = Object.values(UserStatus) as [keyof typeof UserStatus, ...(keyof typeof UserStatus)[]]
+
+// endregion  Utility constants
+
 
 /**
  * Text-Search parser for PostgreSQL

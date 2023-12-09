@@ -1,15 +1,12 @@
 import { adminProcedure, router } from '$lib/trpc'
 import type { inferRouterInputs, inferRouterOutputs } from '@trpc/server'
 // import { TRPCError } from '@trpc/server'
-import { prisma, Prisma, tsQuery, UserRole, UserStatus, type UserWhereInput } from '$lib/prisma'
+import { prisma, Prisma, tsQuery, userRoles, userStatuses, type UserWhereInput } from '$lib/prisma'
 import { z } from 'zod'
 
 export type UserRouter = typeof userRouter
 export type UserRouterInputs = inferRouterInputs<UserRouter>
 export type UserRouterOutputs = inferRouterOutputs<UserRouter>
-
-const userRoles = Object.values(UserRole) as [keyof typeof UserRole, ...(keyof typeof UserRole)[]]
-const userStatuses = Object.values(UserStatus) as [keyof typeof UserStatus, ...(keyof typeof UserStatus)[]]
 
 export const userRouter = router({
 	paginate: adminProcedure
