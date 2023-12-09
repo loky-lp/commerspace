@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { inferRouterInputs, inferRouterOutputs } from '@trpc/server'
 	import type { UserRouter } from '$lib/trpc/routers/user'
+	import type { ArrayElement } from '$lib/types'
 	import { trpc } from '$lib/trpc/client'
 	import { page } from '$app/stores'
 	import { createPagination, useAsyncDataOnMount } from '$lib/utils'
@@ -10,16 +11,14 @@
 	import { ErrorBanner, LoadingPlaceholder, Page, RefreshButton } from '$lib/components'
 	import { Search, Trash2 } from 'lucide-svelte'
 
+	type User = ArrayElement<inferRouterOutputs<UserRouter>['paginate']['items']>
+
 	const filters = writable<inferRouterInputs<UserRouter>['paginate']>({
 			page: 0,
 			limit: 25,
 			query: '',
 			orderBy: {},
 	})
-
-	type ArrayElement<A extends readonly unknown[]> = A extends readonly (infer E)[] ? E : never;
-
-	type User = ArrayElement<inferRouterOutputs<UserRouter>['paginate']['items']>
 
 	const { data, loading, error, refresh } = useAsyncDataOnMount(() => trpc($page).user.paginate.query(get(filters)))
 
@@ -68,7 +67,7 @@
 					{:else if $error}
 						<tr class="cm-table-loading">
 							<td colspan="999" class="p-4">
-								<ErrorBanner error={{ name: '', description: 'Qualcosa è andato storto' }} />
+								<ErrorBanner error={$error} />
 							</td>
 						</tr>
 					{:else}
