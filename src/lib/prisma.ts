@@ -1,7 +1,6 @@
+import type { User as PrismaUser } from '@prisma/client'
 import { Prisma, PrismaClient, UserRole, UserStatus } from '@prisma/client'
 import Tsquery from 'pg-tsquery'
-
-import type { User as PrismaUser } from '@prisma/client'
 
 // TODO: Remove references to '@prisma/client' across the repo
 export * from '@prisma/client'
@@ -43,17 +42,17 @@ export type UserWhereInput = Omit<Prisma.UserWhereInput, 'AND' | 'OR' | 'NOT'> &
 	NOT?: UserWhereInput | UserWhereInput[]
 
 	// Custom properties
-	name?: Prisma.StringNullableFilter<"User"> | string | null
+	name?: Prisma.StringNullableFilter<'User'> | string | null
 }
 
-export type UserWhereUniqueInput = Prisma.AtLeast<UserWhereInput, "id" | "email" | "createdAt">
+export type UserWhereUniqueInput = Prisma.AtLeast<UserWhereInput, 'id' | 'email' | 'createdAt'>
 
 // region Utility constants
 
 export const userRoles = Object.values(UserRole) as [keyof typeof UserRole, ...(keyof typeof UserRole)[]]
 export const userStatuses = Object.values(UserStatus) as [keyof typeof UserStatus, ...(keyof typeof UserStatus)[]]
 
-// endregion  Utility constants
+// endregion Utility constants
 
 
 /**

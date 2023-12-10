@@ -14,10 +14,10 @@
 	type User = ArrayElement<inferRouterOutputs<UserRouter>['paginate']['items']>
 
 	const filters = writable<inferRouterInputs<UserRouter>['paginate']>({
-			page: 0,
-			limit: 25,
-			query: '',
-			orderBy: {},
+		page: 0,
+		limit: 25,
+		query: '',
+		orderBy: {},
 	})
 
 	const { data, loading, error, refresh } = useAsyncDataOnMount(() => trpc($page).user.paginate.query(get(filters)))
@@ -30,6 +30,7 @@
 	function onSelected(user: User) {
 		console.log('row selected', user)
 	}
+
 	function onInfo(user: User) {
 		console.log('user info', user)
 	}
