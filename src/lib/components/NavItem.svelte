@@ -8,13 +8,13 @@
 	const isOpen = getLeftMenuOpen()
 </script>
 
-<li >
+<li>
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<svelte:element
-		this={typeof click === 'string' ? 'a' : 'button'}
+		class="w-full btn bg-surface-hover-token justify-start gap-2 px-2"
 		href={typeof click === 'string' ? click : null}
 		on:click={typeof click === 'string' ? null : click}
-		class="w-full btn bg-surface-hover-token justify-start gap-2 px-2"
+		this={typeof click === 'string' ? 'a' : 'button'}
 	>
 		<slot name="icon">
 			<!-- Text placeholder if icon is absent -->

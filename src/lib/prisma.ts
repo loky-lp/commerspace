@@ -68,3 +68,7 @@ export function tsQuery(query: string | null | undefined): string | undefined {
 
 	return undefined
 }
+
+// region Query utils
+
+// endregion Query utils

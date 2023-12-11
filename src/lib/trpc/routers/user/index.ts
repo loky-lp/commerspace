@@ -37,9 +37,9 @@ export const userRouter = router({
 							{ createdAt: val.createdAt || undefined },
 						]),
 					),
-			})
+			}),
 		)
-		.query(async ({ input}) => {
+		.query(async ({ input }) => {
 			const { role: _role, status: _status, query, page, limit, orderBy } = input
 
 			const where: UserWhereInput = {

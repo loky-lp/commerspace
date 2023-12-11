@@ -44,12 +44,12 @@ export function getErrorInfo(error: Error | TRPCClientError<Router> | ErrorInfo)
 	} else if (isError(error)) {
 		return {
 			name: error.name,
-			description: error.message
+			description: error.message,
 		}
 	} else {
 		return {
 			name: 'non definito',
-			description: 'Qualcosa è andato storto'
+			description: 'Qualcosa è andato storto',
 		}
 	}
 }

@@ -77,14 +77,20 @@
 	})
 </script>
 
-<section class="flex flex-col items-center justify-center min-h-screen gap-10 sm:gap-16 bg-gradient-to-br from-cyan-500 to-purple-500 p-token">
-	<h2 class="bg-surface-900 px-6 py-2.5 text-xl text-surface-50 font-bold border-token border-surface-500 rounded-full select-none text-center">
+<section
+	class="flex flex-col items-center justify-center min-h-screen gap-10 sm:gap-16 bg-gradient-to-br from-cyan-500 to-purple-500 p-token"
+>
+	<h2
+		class="bg-surface-900 px-6 py-2.5 text-xl text-surface-50 font-bold border-token border-surface-500 rounded-full select-none text-center"
+	>
 		Benvenuto su commerspace
 	</h2>
 	<h1 class="font-bold text-6xl sm:text-7xl md:text-8xl text-center select-none">
 		Cerca il tuo nuovo<br>‎{typedText}
 	</h1>
-	<div class="bg-surface-900 border-token border-surface-500 rounded-full w-[clamp(0px,50ch,100vw)] md:w-[clamp(40ch,100ch,100vw)] p-4">
+	<div
+		class="bg-surface-900 border-token border-surface-500 rounded-full w-[clamp(0px,50ch,100vw)] md:w-[clamp(40ch,100ch,100vw)] p-4"
+	>
 		<form class="flex flex-col md:flex-row gap-2"> <!-- TODO Attach action -->
 			<select class="select" required>
 				{#each $categories as { id } (id)}

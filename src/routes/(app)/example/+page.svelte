@@ -18,10 +18,11 @@
 
 <pre><code>{JSON.stringify($page.data, null, 2)}</code></pre>
 
-<a aria-busy={loading}
-	 href="#load"
-	 on:click|preventDefault={loadData}
-	 role="button"
+<a
+	aria-busy={loading}
+	href="#load"
+	on:click|preventDefault={loadData}
+	role="button"
 >Load</a>
 <p>{greeting}</p>
 

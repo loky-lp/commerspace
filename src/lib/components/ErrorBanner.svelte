@@ -15,5 +15,4 @@
 		Errore {info.name}
 	</h2>
 	<p>{info.description}</p>
-<!--	<pre><code>{JSON.stringify(error, null, 2)}</code></pre>-->
 </div>

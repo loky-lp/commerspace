@@ -4,7 +4,7 @@
 	import { page } from '$app/stores'
 
 	import type { PopupSettings } from '@skeletonlabs/skeleton'
-	import { AppShell, Avatar, storePopup, popup } from '@skeletonlabs/skeleton'
+	import { AppShell, Avatar, popup, storePopup } from '@skeletonlabs/skeleton'
 	import { arrow, autoUpdate, computePosition, flip, offset, shift } from '@floating-ui/dom'
 	import { BadgeHelp, Building2, ChevronsLeftRight, ChevronsRightLeft, CircleUser, Users } from 'lucide-svelte'
 
@@ -27,6 +27,7 @@
 		if (e.type == 'mouseleave')
 			isMenuOpen.set(false)
 	}
+
 	$: openButtonText = preferLeftMenuOpen ? 'Comprimi menu' : 'Espandi menu'
 
 	// TODO Fetch the user menu visible voices
@@ -41,7 +42,7 @@
 			isUserPopupOpen = e.state
 			if (!e.state && !preferLeftMenuOpen)
 				isMenuOpen.set(false)
-		}
+		},
 	}
 </script>
 
@@ -68,19 +69,19 @@
 			<!-- Menu -->
 			<nav class="flex-1 overflow-auto py-2">
 				<ul class="list-none">
-					<NavItem text="Utenti" click="/admin/user">
+					<NavItem click="/admin/user" text="Utenti">
 						<Users slot="icon" />
 					</NavItem>
-					<NavItem text="Host" click="/admin/host">
+					<NavItem click="/admin/host" text="Host">
 						<CircleUser slot="icon" />
 					</NavItem>
-					<NavItem text="Locations" click="/admin/location">
+					<NavItem click="/admin/location" text="Locations">
 						<Building2 slot="icon" />
 					</NavItem>
-					<NavItem text="Verifiche sospese" click="/admin/verify">
+					<NavItem click="/admin/verify" text="Verifiche sospese">
 						<BadgeHelp slot="icon" />
 					</NavItem>
-					<NavItem text="CLICK ME" click={() => alert('THE POWER OF THE CLICK FLOWS IN ME')} />
+					<NavItem click={() => alert('THE POWER OF THE CLICK FLOWS IN ME')} text="CLICK ME" />
 				</ul>
 			</nav>
 

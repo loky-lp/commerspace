@@ -34,7 +34,7 @@
 
 <div class="w-screen h-screen flex flex-col">
 	<div class="self-end p-2 sm:p-4">
-		Hai già un account? <a href="/signin" class="font-semibold">Accedi</a>
+		Hai già un account? <a class="font-semibold" href="/signin">Accedi</a>
 	</div>
 	<div class="flex-1 flex items-center justify-center">
 		<div
@@ -48,19 +48,19 @@
 			{/if}
 
 			<form class="w-full grid gap-4" on:submit|preventDefault={handleSignUp}>
-				<input required type="email" name="email" id="email-input" placeholder="Email" bind:value={email}
-				       class="input"
+				<input bind:value={email} class="input" id="email-input" name="email" placeholder="Email" required
+				       type="email"
 				>
-				<input required type="password" name="password" id="password-input" placeholder="Password" bind:value={password}
-				       class="input"
+				<input bind:value={password} class="input" id="password-input" name="password" placeholder="Password" required
+				       type="password"
 				>
 
 				<!-- Inserted only to allow submit from keyboard -->
 				<input class="hidden" type="submit">
 
-				<button disabled={loading} type="submit"
-				        class="btn variant-filled-primary"
-				        class:variant-ghost-primary={loading}
+				<button class="btn variant-filled-primary" class:variant-ghost-primary={loading}
+				        disabled={loading}
+				        type="submit"
 				>
 					{#if loading}
 						<Spinner class="mr-3" />

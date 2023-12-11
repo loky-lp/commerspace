@@ -4,7 +4,7 @@
 @tailwind utilities;
 @tailwind variants;
 
-:root [data-theme='crimson'] {
+:root [data-theme="crimson"] {
 	--theme-font-family-base: "Roboto Condensed Variable", sans-serif;
 	--theme-font-family-heading: "Roboto Condensed Variable", sans-serif;
 }
@@ -87,16 +87,19 @@
 		@apply hidden;
 	}
 
+	/* TODO: Remove p-2 sm:p-4 across the repo*/
 	.p-token {
-		@apply p-2 sm:p-4; /* TODO: Remove p-2 sm:p-4 across the repo*/
+		@apply p-2 sm:p-4;
 	}
 
+	/* TODO: Remove px-2 sm:px-4 across the repo*/
 	.px-token {
-		@apply px-2 sm:px-4; /* TODO: Remove px-2 sm:px-4 across the repo*/
+		@apply px-2 sm:px-4;
 	}
 
+	/* TODO: Remove p-y2 sm:py-4 across the repo*/
 	.py-token {
-		@apply py-2 sm:py-4; /* TODO: Remove p-y2 sm:py-4 across the repo*/
+		@apply py-2 sm:py-4;
 	}
 
 	.max-w-token {

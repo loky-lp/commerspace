@@ -13,5 +13,5 @@ export const router = r({
 	category: categoryRouter,
 	example: exampleRouter,
 	location: locationRouter,
-	user: userRouter
+	user: userRouter,
 })

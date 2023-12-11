@@ -24,7 +24,7 @@ services:
       POSTGRES_PASSWORD: postgres
       PGDATA: /var/lib/postgresql/data/commerspace/
     healthcheck:
-      test: ['CMD', 'pg_isready', '-q', '-d', 'postgres', '-U', 'postgres']
+      test: [ 'CMD', 'pg_isready', '-q', '-d', 'postgres', '-U', 'postgres' ]
       retries: 3
       timeout: 5s
 

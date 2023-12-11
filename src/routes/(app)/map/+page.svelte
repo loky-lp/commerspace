@@ -55,7 +55,7 @@
 			name: 'Ninoy Aquino',
 			open: false,
 		},
-	];
+	]
 </script>
 
 map libre
@@ -68,32 +68,32 @@ map libre
 	{/if}
 </p>
 <MapLibre
-				bind:map
-				class="relative w-full aspect-[9/16] max-h-[70vh] sm:max-h-full sm:aspect-video"
-				standardControls
-				style={streetStyle}
+	bind:map
+	class="relative w-full aspect-[9/16] max-h-[70vh] sm:max-h-full sm:aspect-video"
+	standardControls
+	style={streetStyle}
 >
 	{#each markers as { lngLat, label, name, open } (label)}
 		<Marker
-						{lngLat}
-						on:click={() => (clickedName = name)}
-						asButton={true}
-						class="bg-red-500 hover:bg-green-500 transition-colors rounded-full px-2"
+			{lngLat}
+			on:click={() => (clickedName = name)}
+			asButton={true}
+			class="bg-red-500 hover:bg-green-500 transition-colors rounded-full px-2"
 		>
-<!--						class="border-gray-200 border shadow-2xl focus:outline-2 focus:outline-black w-8 h-8 bg-red-300 text-black rounded-full grid place-items-center"-->
-      <span class="palla">
+			<!--			class="border-gray-200 border shadow-2xl focus:outline-2 focus:outline-black w-8 h-8 bg-red-300 text-black rounded-full grid place-items-center"-->
+			<span class="palla">
         {label}
       </span>
 
 			<Popup
-							anchor="center"
-							openOn="click"
-							popupClass="map-popup-hide-tip map-popup-place-content"
-							bind:open
+				anchor="center"
+				openOn="click"
+				popupClass="map-popup-hide-tip map-popup-place-content"
+				bind:open
 			>
 				<button
-								class="absolute top-2 left-2 bg-black/25 rounded-full aspect-square h-5"
-								on:click={() => open = !open}
+					class="absolute top-2 left-2 bg-black/25 rounded-full aspect-square h-5"
+					on:click={() => open = !open}
 				>
 					X
 				</button>

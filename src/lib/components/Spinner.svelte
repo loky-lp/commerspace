@@ -5,9 +5,9 @@
 </script>
 
 <ProgressRadial
-	value={undefined}
-	{width}
 	class={$$props.class ?? ''}
 	meter="stroke-primary-500"
 	track="stroke-primary-500/30"
+	value={undefined}
+	{width}
 />
