@@ -15,7 +15,7 @@ export const commerspace: CustomThemeConfig = {
 		// "--theme-font-color-base": "var(--color-surface-900)",
 		// "--theme-font-color-dark": "var(--color-surface-50)",
 		'--theme-rounded-base': '9999px',
-		'--theme-rounded-container': '38px',
+		'--theme-rounded-container': '32px',
 		'--theme-border-base': '1px',
 		// =~= Theme On-X Colors =~=
 		'--on-primary': '0 0 0',
