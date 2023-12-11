@@ -86,4 +86,24 @@
 	.map-popup-hide-tip .maplibregl-popup-tip {
 		@apply hidden;
 	}
+
+	.p-token {
+		@apply p-2 sm:p-4; /* TODO: Remove p-2 sm:p-4 across the repo*/
+	}
+
+	.px-token {
+		@apply px-2 sm:px-4; /* TODO: Remove px-2 sm:px-4 across the repo*/
+	}
+
+	.py-token {
+		@apply py-2 sm:py-4; /* TODO: Remove p-y2 sm:py-4 across the repo*/
+	}
+
+	.max-w-token {
+		@apply max-w-screen-xl;
+	}
+
+	.max-w-token-center {
+		@apply max-w-screen-xl mx-auto;
+	}
 }
