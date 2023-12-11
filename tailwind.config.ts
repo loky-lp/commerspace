@@ -1,6 +1,7 @@
 import { join } from 'path'
 import type { Config } from 'tailwindcss'
 
+import twForms from '@tailwindcss/forms'
 import { type CustomThemeConfig, skeleton } from '@skeletonlabs/tw-plugin'
 
 export const commerspace: CustomThemeConfig = {
@@ -194,6 +195,7 @@ const config = {
 	},
 
 	plugins: [
+		twForms,
 		skeleton({
 			themes: {
 				preset: [
