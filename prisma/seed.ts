@@ -128,6 +128,41 @@ async function seed() {
 	})
 
 	console.log(printPerformanceDiff(startTime))
+
+	// Create locations
+
+	startTime = performance.now()
+	process.stdout.write('  └─ Locations  ')
+
+	await prisma.$transaction(
+		create(300, 600, () => {
+			const type = faker.commerce.department()
+			return prisma.location.create({
+				data: {
+					user: {
+						create: createUser(),
+					},
+					displayName: faker.company.name(),
+					description: faker.lorem.text(),
+					key: unique(faker.string.uuid),
+
+					photos: create(1, 20, faker.image.url),
+					type: {
+						connectOrCreate: {
+							create: { id: type, createdAt: nextCreatedAt() },
+							where: { id: type },
+						},
+					},
+
+					// TODO Create services and rates
+
+					createdAt: nextCreatedAt(),
+				},
+			})
+		}),
+	)
+
+	console.log(printPerformanceDiff(startTime))
 }
 
 seed()
