@@ -15,7 +15,7 @@ export const commerspace: CustomThemeConfig = {
 		// "--theme-font-color-base": "var(--color-surface-900)",
 		// "--theme-font-color-dark": "var(--color-surface-50)",
 		'--theme-rounded-base': '9999px',
-		'--theme-rounded-container': '32px',
+		'--theme-rounded-container': '38px',
 		'--theme-border-base': '1px',
 		// =~= Theme On-X Colors =~=
 		'--on-primary': '0 0 0',
@@ -24,7 +24,7 @@ export const commerspace: CustomThemeConfig = {
 		// "--on-success": "0 0 0",
 		// "--on-warning": "0 0 0",
 		// "--on-error": "255 255 255",
-		// "--on-surface": "255 255 255",
+		"--on-surface": "255 255 255",
 		// =~= Theme Colors  =~=
 		// primary | #55B785
 		'--color-primary-50': '230 244 237', // #e6f4ed
@@ -92,17 +92,17 @@ export const commerspace: CustomThemeConfig = {
 		// "--color-error-700": "159 19 89", // #9f1359
 		// "--color-error-800": "127 15 71", // #7f0f47
 		// "--color-error-900": "104 12 58", // #680c3a
-		// surface | #3b3b3b
-		// "--color-surface-50": "226 226 226", // #e2e2e2
-		// "--color-surface-100": "216 216 216", // #d8d8d8
-		// "--color-surface-200": "206 206 206", // #cecece
-		// "--color-surface-300": "177 177 177", // #b1b1b1
-		// "--color-surface-400": "118 118 118", // #767676
-		// "--color-surface-500": "59 59 59", // #3b3b3b
-		// "--color-surface-600": "53 53 53", // #353535
-		// "--color-surface-700": "44 44 44", // #2c2c2c
-		// "--color-surface-800": "35 35 35", // #232323
-		// "--color-surface-900": "29 29 29", // #1d1d1d
+		// surface | #525252
+		"--color-surface-50": "229 229 229", // #e5e5e5
+		"--color-surface-100": "220 220 220", // #dcdcdc
+		"--color-surface-200": "212 212 212", // #d4d4d4
+		"--color-surface-300": "186 186 186", // #bababa
+		"--color-surface-400": "134 134 134", // #868686
+		"--color-surface-500": "82 82 82", // #525252
+		"--color-surface-600": "74 74 74", // #4a4a4a
+		"--color-surface-700": "62 62 62", // #3e3e3e
+		"--color-surface-800": "49 49 49", // #313131
+		"--color-surface-900": "40 40 40", // #282828
 
 		// Crimson placeholder while we define the commerspace theme
 		'--on-secondary': '255 255 255',
@@ -110,7 +110,6 @@ export const commerspace: CustomThemeConfig = {
 		'--on-success': '0 0 0',
 		'--on-warning': '0 0 0',
 		'--on-error': '0 0 0',
-		'--on-surface': '255 255 255',
 		'--color-secondary-50': '227 237 243',
 		'--color-secondary-100': '218 231 239',
 		'--color-secondary-200': '209 225 235',
@@ -161,16 +160,6 @@ export const commerspace: CustomThemeConfig = {
 		'--color-error-700': '158 95 97',
 		'--color-error-800': '126 76 77',
 		'--color-error-900': '103 62 63',
-		'--color-surface-50': '223 224 226',
-		'--color-surface-100': '213 213 217',
-		'--color-surface-200': '202 203 207',
-		'--color-surface-300': '170 171 179',
-		'--color-surface-400': '107 109 121',
-		'--color-surface-500': '43 46 64',
-		'--color-surface-600': '39 41 58',
-		'--color-surface-700': '32 35 48',
-		'--color-surface-800': '26 28 38',
-		'--color-surface-900': '21 23 31',
 	},
 }
 
