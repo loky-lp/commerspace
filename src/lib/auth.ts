@@ -8,9 +8,8 @@ import Credentials from '@auth/core/providers/credentials'
 import { hash as makeHash, verify as verifyHash } from 'argon2'
 import { z } from 'zod'
 
-import { UserRole, UserStatus } from '@prisma/client'
 import type { User } from '$lib/prisma'
-import { prisma } from '$lib/prisma'
+import { prisma, UserRole, UserStatus } from '$lib/prisma'
 
 export type HashedPassword = string
 

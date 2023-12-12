@@ -2,7 +2,6 @@ import type { User as PrismaUser } from '@prisma/client'
 import { Prisma, PrismaClient, UserRole, UserStatus } from '@prisma/client'
 import Tsquery from 'pg-tsquery'
 
-// TODO: Remove references to '@prisma/client' across the repo
 export * from '@prisma/client'
 
 // Prisma is basically unusable, we need to either re-export manually or create a manual type inference

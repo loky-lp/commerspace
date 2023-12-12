@@ -2,9 +2,9 @@ import type { Handle } from '@sveltejs/kit'
 import { error } from '@sveltejs/kit'
 import { sequence } from '@sveltejs/kit/hooks'
 import { createTRPCHandle } from 'trpc-sveltekit'
-import { UserRole } from '@prisma/client'
 
 import { authHandle } from '$lib/auth'
+import { UserRole } from '$lib/prisma'
 import { router } from '$lib/trpc/routers'
 import { createContext } from '$lib/trpc/context'
 
