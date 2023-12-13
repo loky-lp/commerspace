@@ -4,6 +4,8 @@
 	import { arrow, autoUpdate, computePosition, flip, offset, shift } from '@floating-ui/dom'
 	import { page } from '$app/stores'
 	import { signOut } from '@auth/sveltekit/client'
+	import { onMount } from 'svelte'
+	import { getIsScrolled, setIsScrolled } from '$lib/context'
 
 	// $: activeUrl = $page.url.pathname
 	$: user = $page.data.session?.user
@@ -26,6 +28,19 @@
 		target: 'popupClick',
 		placement: 'bottom-end',
 	}
+
+	setIsScrolled()
+	const isScrolled = getIsScrolled()
+	onMount(() => {
+		// HACK: This is the css id used by Skeleton, when the library updates this without notice this breaks easily
+		const pageContent = document.getElementById('page') as HTMLDivElement
+
+		pageContent.onscroll = (e: Event) => {
+			const t = e.target as HTMLDivElement
+			isScrolled.set(t.scrollTop != 0)
+		}
+	})
+
 </script>
 
 <Drawer opacityTransition={false} position="right">
@@ -43,10 +58,15 @@
 
 <AppShell
 	class="transition-transform {positionClasses}"
+	slotHeader="fixed w-full"
 	slotSidebarLeft="bg-surface-500/5 w-56 p-4"
 >
 	<svelte:fragment slot="header">
-		<AppBar slotDefault="flex justify-center">
+		<AppBar
+			background="{$isScrolled ? 'bg-surface-900' : 'bg-transparent'}"
+			class="transition-colors {$isScrolled ? 'text-surface-50' : 'text-current'}"
+			slotDefault="flex justify-center"
+		>
 			<svelte:fragment slot="lead">
 				<a class="flex items-center gap-3" href="/">
 					<img alt="Commerspace Logo" class="h-6 sm:h-9" src="/favicon.png" />
