@@ -7,7 +7,7 @@
 	import { onMount } from 'svelte'
 	import { getIsScrolled, setIsScrolled } from '$lib/context'
 
-	// $: activeUrl = $page.url.pathname
+	$: isIndexPage = $page.url.pathname == '/'
 	$: user = $page.data.session?.user
 
 	const drawerStore = getDrawerStore()
@@ -41,6 +41,27 @@
 		}
 	})
 
+	$: headerProps = {
+		slotHeader: isIndexPage ? 'fixed w-full' : '',
+		background: isIndexPage
+			? !$isScrolled
+				? 'bg-transparent'
+				: user
+					? 'bg-primary-500'
+					: 'bg-surface-900'
+			: user
+				? 'bg-primary-500'
+				: 'bg-surface-900',
+		class: isIndexPage
+			? `transition-[background-color] ${user
+				? 'text-current'
+				: $isScrolled
+					? 'text-surface-50'
+					: 'text-current'}`
+			: user
+				? 'text-on-primary-token'
+				: 'text-on-surface-token',
+	}
 </script>
 
 <Drawer opacityTransition={false} position="right">
@@ -58,13 +79,13 @@
 
 <AppShell
 	class="transition-transform {positionClasses}"
-	slotHeader="fixed w-full"
+	slotHeader={headerProps.slotHeader}
 	slotSidebarLeft="bg-surface-500/5 w-56 p-4"
 >
 	<svelte:fragment slot="header">
 		<AppBar
-			background="{!$isScrolled ? 'bg-transparent' : user ? 'bg-primary-500' : 'bg-surface-900'}"
-			class="transition-colors {user ? '': $isScrolled ? 'text-surface-50' : 'text-current'}"
+			background={headerProps.background}
+			class={headerProps.class}
 			slotDefault="flex justify-center"
 		>
 			<svelte:fragment slot="lead">
