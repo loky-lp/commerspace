@@ -63,8 +63,8 @@
 >
 	<svelte:fragment slot="header">
 		<AppBar
-			background="{$isScrolled ? 'bg-surface-900' : 'bg-transparent'}"
-			class="transition-colors {$isScrolled ? 'text-surface-50' : 'text-current'}"
+			background="{!$isScrolled ? 'bg-transparent' : user ? 'bg-primary-500' : 'bg-surface-900'}"
+			class="transition-colors {user ? '': $isScrolled ? 'text-surface-50' : 'text-current'}"
 			slotDefault="flex justify-center"
 		>
 			<svelte:fragment slot="lead">
