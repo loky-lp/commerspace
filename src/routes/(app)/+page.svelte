@@ -5,6 +5,7 @@
 	import { derived } from 'svelte/store'
 	import { onMount } from 'svelte'
 	import { ArrowLeft, ArrowRight } from 'lucide-svelte'
+	import { SearchFields } from '$lib/components'
 
 	const {
 		data: trpcCategories,
@@ -91,16 +92,7 @@
 	<div
 		class="bg-surface-900 border-token border-surface-500 rounded-full w-[clamp(0px,50ch,100vw)] md:w-[clamp(40ch,100ch,100vw)] p-4"
 	>
-		<form class="flex flex-col md:flex-row gap-2"> <!-- TODO Attach action -->
-			<select class="select" required>
-				{#each $categories as { id } (id)}
-					<option value={id} class="capitalize">{id}</option>
-				{/each}
-			</select>
-			<input class="input" placeholder="Dove" type="text">
-			<input class="input" placeholder="Picker" type="text">
-			<button class="btn variant-filled-primary" type="submit">Carica</button>
-		</form>
+		<SearchFields {categories} on:submit={e => console.log(e)}/>
 	</div>
 </section>
 
