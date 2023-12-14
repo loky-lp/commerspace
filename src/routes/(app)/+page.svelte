@@ -67,10 +67,7 @@
 
 	onMount(() => {
 		categoriesSlider.addEventListener('scroll', (e: Event) => {
-			if ((e?.target as HTMLDivElement | undefined)?.scrollLeft === 0)
-				isAtInitialPosition = true
-			else
-				isAtInitialPosition = false
+			isAtInitialPosition = (e?.target as HTMLDivElement | undefined)?.scrollLeft === 0
 		})
 	})
 </script>

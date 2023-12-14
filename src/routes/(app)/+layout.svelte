@@ -32,12 +32,13 @@
 	setIsScrolled()
 	const isScrolled = getIsScrolled()
 	onMount(() => {
-		// HACK: This is the css id used by Skeleton, when the library updates this without notice this breaks easily
-		const pageContent = document.getElementById('page') as HTMLDivElement
+		if (isIndexPage) {
+			// HACK: This is the css id used by Skeleton, when the library updates this without notice this breaks easily
+			const pageContent = document.getElementById('page') as HTMLDivElement
 
-		pageContent.onscroll = (e: Event) => {
-			const t = e.target as HTMLDivElement
-			isScrolled.set(t.scrollTop != 0)
+			pageContent.addEventListener('scroll', () => {
+				isScrolled.set(pageContent.scrollTop != 0)
+			}, { passive: true })
 		}
 	})
 
