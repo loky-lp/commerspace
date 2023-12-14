@@ -6,6 +6,7 @@
 	import { onMount } from 'svelte'
 	import { ArrowLeft, ArrowRight } from 'lucide-svelte'
 	import { SearchFields } from '$lib/components'
+	import { goto } from '$app/navigation'
 
 	const categories = $page.data.categories
 
@@ -70,6 +71,19 @@
 			isAtInitialPosition = (e?.target as HTMLDivElement | undefined)?.scrollLeft === 0
 		})
 	})
+
+	function handleSearch(e: CustomEvent<FormData>) {
+		const position = e.detail.get('position')
+		// position is removed to avoid having it in the query params
+		e.detail.delete('position')
+
+		const queryParams = Array.from(e.detail.entries())
+			// map from tuple to queryParam key=value
+			.map(([ key, value ]) => `${key}=${value}`)
+			.join('&')
+
+		goto(`/s/${position}?${queryParams}`)
+	}
 </script>
 
 <section
@@ -86,7 +100,7 @@
 	<div
 		class="bg-surface-900 border-token border-surface-500 rounded-full w-[clamp(0px,50ch,100vw)] md:w-[clamp(40ch,100ch,100vw)] p-4"
 	>
-		<SearchFields {categories} on:submit={e => console.log(e)}/>
+		<SearchFields {categories} on:submit={handleSearch}/>
 	</div>
 </section>
 
