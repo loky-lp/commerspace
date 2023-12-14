@@ -1,16 +1,13 @@
 <script lang="ts">
-	import { useAsyncDataOnMount } from '$lib/utils'
-	import { trpc } from '$lib/trpc/client'
+	// import { useAsyncDataOnMount } from '$lib/utils'
+	// import { trpc } from '$lib/trpc/client'
 	import { page } from '$app/stores'
-	import { derived } from 'svelte/store'
+	// import { derived } from 'svelte/store'
 	import { onMount } from 'svelte'
 	import { ArrowLeft, ArrowRight } from 'lucide-svelte'
 	import { SearchFields } from '$lib/components'
 
-	const {
-		data: trpcCategories,
-	} = useAsyncDataOnMount(() => trpc($page).category.getAll.query({}))
-	const categories = derived(trpcCategories, ($c) => $c ?? [])
+	const categories = $page.data.categories
 
 	const words = [
 		'Ufficio',

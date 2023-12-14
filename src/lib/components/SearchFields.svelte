@@ -1,13 +1,12 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte'
-	import type { Readable } from 'svelte/store'
 
 	const dispatch = createEventDispatcher()
 
 	type Category = {
 		id: string
 	}
-	export let categories: Readable<Category[]>
+	export let categories: Category[]
 
 </script>
 
