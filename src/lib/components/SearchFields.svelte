@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte'
 
-	const dispatch = createEventDispatcher()
+	const dispatch = createEventDispatcher<{
+		submit: FormData
+	}>()
 
 	type Category = {
 		id: string
@@ -9,7 +11,7 @@
 	export let categories: Category[]
 
 	let category: string
-	let location: string
+	let position: string
 	let checkIn: Date = new Date()
 	let checkOut: Date = new Date()
 
@@ -18,7 +20,7 @@
 		// const data = new FormData(formElement)
 		const data = new FormData()
 		data.append('category', category)
-		data.append('location', location)
+		data.append('position', position)
 		data.append('checkIn', checkIn.toISOString())
 		data.append('checkOut', checkOut.toISOString())
 		dispatch('submit', data)
@@ -35,7 +37,7 @@
 		{/each}
 	</select>
 	<!-- TODO: Add autocomplete -->
-	<input bind:value={location} class="input" placeholder="Dove" required type="text">
+	<input bind:value={position} class="input" placeholder="Dove" required type="text">
 	<input class="input" placeholder="Picker" required type="text">
 	<button class="btn variant-filled-primary" type="submit">Carica</button>
 </form>
