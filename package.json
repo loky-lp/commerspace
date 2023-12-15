@@ -34,6 +34,7 @@
 		"autoprefixer": "^10.4.14",
 		"eslint": "^8.28.0",
 		"eslint-plugin-svelte": "^2.30.0",
+		"iconify-icon": "^1.0.8",
 		"lucide-svelte": "^0.294.0",
 		"package": "^1.0.1",
 		"pg-tsquery": "^8.4.1",
