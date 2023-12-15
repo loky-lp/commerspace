@@ -23,24 +23,63 @@ export const load: PageServerLoad = ({ fetch, url, params: { position } }) => {
 				],
 				rates: [
 					{
-						id: '1234567890',
+						id: '1',
 						price: 20,
 						quantity: 1,
 						interval: 'DAY',
 					},
 					{
-						id: '1234567890',
+						id: '2',
+						price: 20,
+						quantity: 2,
+						interval: 'DAY',
+					},
+					{
+						id: '3',
 						price: 120,
 						quantity: 1,
 						interval: 'WEEK',
 					},
+					{
+						id: '4',
+						price: 120,
+						quantity: 2,
+						interval: 'WEEK',
+					},
+					{
+						id: '5',
+						price: 120,
+						quantity: 1,
+						interval: 'MONTH',
+					},
+					{
+						id: '6',
+						price: 120,
+						quantity: 2,
+						interval: 'MONTH',
+					},
+					{
+						id: '7',
+						price: 120,
+						quantity: 1,
+						interval: 'YEAR',
+					},
+					{
+						id: '8',
+						price: 120,
+						quantity: 2,
+						interval: 'YEAR',
+					},
 				],
-				services: [],
+				services: [
+					{ id: '1', name: 'Wi-Fi' },
+					{ id: '2', name: 'Caffè' },
+				],
 				// if the user is logged in, show the following fields
 				favorite: true,
 			},
 			{
-				id: '1234567890',
+				id: '0987654321',
 				type: 'Sala Eventi',
 				name: 'Titolo Annuncio',
 				address: 'Via Rodolfo Lanciani 10, Roma',
@@ -53,19 +92,21 @@ export const load: PageServerLoad = ({ fetch, url, params: { position } }) => {
 				],
 				rates: [
 					{
-						id: '1234567890',
+						id: '11',
 						price: 20,
 						quantity: 1,
 						interval: 'DAY',
 					},
 					{
-						id: '1234567890',
+						id: '12',
 						price: 120,
 						quantity: 1,
 						interval: 'WEEK',
 					},
 				],
-				services: [],
+				services: [
+					{ id: '1', name: 'Wi-Fi' },
+				],
 				// if the user is logged in, show the following fields
 				favorite: true,
 			},
