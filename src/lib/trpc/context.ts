@@ -9,7 +9,7 @@ export async function createContext(event: RequestEvent) {
 	console.log('trpc context session', session)
 	return {
 		// event information like ip, useragent etc..
-		session
+		session,
 		// context information
 		// user
 		// prisma

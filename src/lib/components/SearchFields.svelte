@@ -31,7 +31,7 @@
 	class="flex flex-col md:flex-row gap-2"
 	on:submit|preventDefault={submit}
 >
-	<select class="select" required bind:value={category}>
+	<select bind:value={category} class="select" required>
 		{#each categories as { id } (id)}
 			<option value={id} class="capitalize">{id}</option>
 		{/each}
