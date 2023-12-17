@@ -7,7 +7,7 @@ Install dependencies:
 pnpm i
 ```
 
-Create `.env` from `.env.example`, the only value that need to be set is `PUBLIC_MAPTILER_KEY`
+Create `.env` from `.env.example`, the only value that need to be set is `PUBLIC_MAPBOX_TOKEN`
 
 Ensure you have docker daemon running
 
