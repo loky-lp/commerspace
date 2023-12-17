@@ -47,6 +47,9 @@ devDependencies:
   '@trpc/server':
     specifier: ^10.43.0
     version: 10.43.1
+  '@types/mapbox-gl':
+    specifier: ^2.7.19
+    version: 2.7.19
   '@types/node':
     specifier: v18.18.2
     version: 18.18.2
@@ -847,6 +850,12 @@ packages:
 
   /@types/json-schema@7.0.14:
     resolution: {integrity: sha512-U3PUjAudAdJBeC2pgN8uTIKgxrb4nlDF3SF0++EldXQvQBGkpFZMSnwQiIoDU77tv45VgNkl/L4ouD+rEomujw==}
+    dev: true
+
+  /@types/mapbox-gl@2.7.19:
+    resolution: {integrity: sha512-pkRdlhQJNbtwcKJSVC4uuOA6M3OlOObIMhNecqHB991oeaDF5XkjSIRaTE0lh5p4KClptSCxW6MBiREVRHrl2A==}
+    dependencies:
+      '@types/geojson': 7946.0.13
     dev: true
 
   /@types/mapbox__point-geometry@0.1.4:
