@@ -17,7 +17,7 @@ export const load: PageServerLoad = ({ fetch, url, params: { position } }) => {
 				images: [
 					{
 						id: '1234567890',
-						url: 'https://picsum.photos/seed/picsum/200/300',
+						url: 'https://picsum.photos/seed/picsum/500/500',
 						alt: 'Titolo Immagine',
 					},
 				],
@@ -86,7 +86,7 @@ export const load: PageServerLoad = ({ fetch, url, params: { position } }) => {
 				images: [
 					{
 						id: '1234567890',
-						url: 'https://picsum.photos/seed/picsum/200/300',
+						url: 'https://picsum.photos/seed/picsum/500/500',
 						alt: 'Titolo Immagine',
 					},
 				],

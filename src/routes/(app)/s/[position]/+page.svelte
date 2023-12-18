@@ -19,8 +19,16 @@
 				href="/l/{id}"
 				class="flex gap-2 bg-surface-hover-token transition-colors border border-surface-300-600-token rounded-container-token p-4"
 			>
-				<div>
-					carosello
+				<div class="basis-60">
+					{#if images.length > 0}
+						<img src={images[0].url} alt={images[0].alt}
+						     class="rounded-container-token w-full aspect-square object-cover"
+						/>
+					{:else}
+						<img src="https://dummyimage.com/400/dedede/696969&text=Nessuna+foto+presente" alt=""
+						     class="rounded-container-token w-fullaspect-square object-cover"
+						/>
+					{/if}
 				</div>
 				<div class="flex-1 flex flex-col gap-3">
 					<p class="font-bold">{type}</p>
