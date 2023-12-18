@@ -1,5 +1,7 @@
 <script lang="ts">
 	import type { PageData } from './$types'
+	import { page } from '$app/stores'
+	// TODO: import { trpc } from '$lib/trpc/client'
 	import { rateFormat } from '$lib/utils/rate-format'
 	import { goto } from '$app/navigation'
 	import { SearchFields } from '$lib/components'
@@ -8,7 +10,12 @@
 	import { Heart } from 'lucide-svelte'
 
 	export let data: PageData
-	const { categories, locations } = data
+	const { categories } = data
+	// This approach is suboptimal when the page contains a lot of locations,
+	// for fine-grained reactivity we have to wait for Svelte 5
+	let { locations } = data
+
+	$: user = $page.data.session?.user
 
 	function handleSearch(e: CustomEvent<FormData>) {
 		const position = e.detail.get('position')
@@ -22,6 +29,31 @@
 
 		goto(`/s/${position}?${queryParams}`)
 	}
+
+	async function handleFavorite(locationId: string) {
+		if (!user) {
+			goto('/signin') // TODO: Add redirect to the current page after signin
+			return
+		}
+
+		const locationIndex = locations.findIndex(location => location.id === locationId)
+		const initialIsFavorite = locations[locationIndex].isFavorite
+
+		try {
+			// Optimistically update the icon
+			locations[locationIndex].isFavorite = !initialIsFavorite
+			locations = locations
+
+			// TODO: await trpc($page).location.addToFavorites.mutate({ locationId })
+		} catch (e: unknown) {
+			console.error(e)
+			// Revert the changes if something goes wrong
+			locations[locationIndex].isFavorite = initialIsFavorite
+			locations = locations
+		}
+
+		console.log('favorite', locationId)
+	}
 </script>
 
 <div class="grid md:grid-cols-2">
@@ -30,7 +62,7 @@
 		<h2 class="text-xl font-bold">
 			{locations.length === 1 ? 'È stato trovato un singolo annuncio' : `Sono stati trovati ${locations.length} annunci`}
 		</h2>
-		{#each locations as { id, type, name, address, images, rates, services } (id)}
+		{#each locations as { id, type, name, address, images, rates, services, isFavorite } (id)}
 			<a
 				href="/l/{id}"
 				class="flex gap-2 bg-surface-hover-token transition-colors border border-surface-300-600-token rounded-container-token p-4"
@@ -47,8 +79,22 @@
 					{/if}
 				</div>
 				<div class="flex-1 flex flex-col gap-3">
-					<p class="font-bold">{type}</p>
-					<h3 class="font-bold text-2xl">{name}</h3>
+					<div class="flex items-start">
+						<div class="flex-1">
+							<p class="font-bold">{type}</p>
+							<h3 class="font-bold text-2xl mt-3">{name}</h3>
+						</div>
+						<button
+							class="btn-icon bg-surface-hover-token {isFavorite ? 'text-yellow-500' : 'text-surface-900-50-token'}"
+							on:click|stopPropagation|preventDefault={() => handleFavorite(id)}
+						>
+							{#if isFavorite}
+								<Heart fill="currentColor" />
+							{:else}
+								<Heart />
+							{/if}
+						</button>
+					</div>
 					<p>{address}</p>
 					<p class="flex flex-wrap gap-2">
 						{#each rates as rate (rate.id)}
@@ -64,9 +110,6 @@
 							</span>
 						{/each}
 					</p>
-				</div>
-				<div>
-					<Heart />
 				</div>
 			</a>
 		{/each}

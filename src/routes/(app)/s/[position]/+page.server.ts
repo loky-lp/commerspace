@@ -78,7 +78,7 @@ export const load: PageServerLoad = async ({ fetch, url, params: { position } })
 					{ id: '2', name: 'Caffè' },
 				],
 				// if the user is logged in, show the following fields
-				favorite: true,
+				isFavorite: true,
 			},
 			{
 				id: '0987654321',
@@ -110,7 +110,7 @@ export const load: PageServerLoad = async ({ fetch, url, params: { position } })
 					{ id: '1', name: 'Wi-Fi' },
 				],
 				// if the user is logged in, show the following fields
-				favorite: true,
+				isFavorite: false,
 			},
 		],
 	}
