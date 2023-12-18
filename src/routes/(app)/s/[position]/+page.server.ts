@@ -1,6 +1,7 @@
 import type { PageServerLoad } from './$types'
+import { trpc } from '$lib/trpc/client'
 
-export const load: PageServerLoad = ({ fetch, url, params: { position } }) => {
+export const load: PageServerLoad = async ({ fetch, url, params: { position } }) => {
 	// Check if position is a valid position, if not, return 404
 
 	// Call trpc to get the data for the position
@@ -8,6 +9,7 @@ export const load: PageServerLoad = ({ fetch, url, params: { position } }) => {
 	// Pass url.searchParams to trpc to filter the data
 
 	return {
+		categories: await trpc({ fetch, url }).category.getAll.query({}),
 		locations: [
 			{
 				id: '1234567890',

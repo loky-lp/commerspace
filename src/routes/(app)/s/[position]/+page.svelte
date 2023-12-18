@@ -1,17 +1,33 @@
 <script lang="ts">
 	import type { PageData } from './$types'
 	import { rateFormat } from '$lib/utils/rate-format'
+	import { goto } from '$app/navigation'
+	import { SearchFields } from '$lib/components'
 
 	import 'iconify-icon'
 	import { Heart } from 'lucide-svelte'
 
 	export let data: PageData
-	const { locations } = data
+	const { categories, locations } = data
+
+	function handleSearch(e: CustomEvent<FormData>) {
+		const position = e.detail.get('position')
+		// position is removed to avoid having it in the query params
+		e.detail.delete('position')
+
+		const queryParams = Array.from(e.detail.entries())
+			// map from tuple to queryParam key=value
+			.map(([key, value]) => `${key}=${value}`)
+			.join('&')
+
+		goto(`/s/${position}?${queryParams}`)
+	}
 </script>
 
 <div class="grid md:grid-cols-2">
 	<div class="flex flex-col gap-2 sm:gap-4 p-token">
-		<h2>
+		<SearchFields {categories} on:submit={handleSearch} />
+		<h2 class="text-xl font-bold">
 			{locations.length === 1 ? 'È stato trovato un singolo annuncio' : `Sono stati trovati ${locations.length} annunci`}
 		</h2>
 		{#each locations as { id, type, name, address, images, rates, services } (id)}
