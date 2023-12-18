@@ -4,7 +4,6 @@
 	import { page } from '$app/stores'
 	// import { derived } from 'svelte/store'
 	import { onMount } from 'svelte'
-	import { ArrowLeft, ArrowRight } from 'lucide-svelte'
 	import { SearchFields } from '$lib/components'
 	import { goto } from '$app/navigation'
 
@@ -63,15 +62,6 @@
 		},
 	]
 
-	let categoriesSlider: HTMLDivElement
-	let isAtInitialPosition = true
-
-	onMount(() => {
-		categoriesSlider.addEventListener('scroll', (e: Event) => {
-			isAtInitialPosition = (e?.target as HTMLDivElement | undefined)?.scrollLeft === 0
-		})
-	})
-
 	function handleSearch(e: CustomEvent<FormData>) {
 		const position = e.detail.get('position')
 		// position is removed to avoid having it in the query params
@@ -98,7 +88,7 @@
 		Cerca il tuo nuovo<br>‎{typedText}
 	</h1>
 	<div
-		class="bg-surface-900 border-token border-surface-500 rounded-full w-[clamp(0px,50ch,100vw)] md:w-[clamp(40ch,100ch,100vw)] p-4"
+		class="bg-surface-900 border-token border-surface-500 rounded-[32px] md:rounded-full w-[clamp(0px,50ch,100vw)] md:w-[clamp(40ch,100ch,100vw)] p-4"
 	>
 		<SearchFields {categories} on:submit={handleSearch} />
 	</div>
@@ -110,41 +100,13 @@
 	<div class="max-w-token-center flex flex-col gap-6">
 		<h3 class="px-token text-3xl font-bold">Cerca lo spazio giusto per te</h3>
 		<h4 class="px-token text-xl">Scopri tutte le tipologie di annunci su Commerspace!</h4>
-		<div class="px-token">
-			<div class="flex justify-between">
-				<button
-					class="btn-icon btn-icon-sm variant-filled-surface"
-					class:invisible={isAtInitialPosition}
-					on:click={() => categoriesSlider.scrollBy({ top: 0, left: -categoriesSlider.offsetWidth, behavior: 'smooth' })}
-				>
-					<ArrowLeft />
-				</button>
-				<button
-					class="{isAtInitialPosition ? 'btn btn-sm' : 'btn-icon btn-icon-sm' } variant-filled-surface py-1 gap-2"
-					on:click={() => categoriesSlider.scrollBy({ top: 0, left: categoriesSlider.offsetWidth, behavior: 'smooth' })}
-				>
-					{#if isAtInitialPosition}
-						Scorri per scoprire le altre
-					{/if}
-					<ArrowRight />
-				</button>
-			</div>
-			<div bind:this={categoriesSlider}
-			     class="hide-scrollbar max-w-full mx-auto grid grid-flow-col auto-cols-max gap-8 overflow-y-scroll p-4 scroll-ps-4 snap-x snap-mandatory"
-			>
-				{#each categoriesShowcase as { href, displayName, imgUrl } (displayName)}
-					<a {href} class="snap-start flex flex-col gap-4">
-						<img src={imgUrl} alt={displayName} class="rounded-container-token">
-						<span class="text-xl font-semibold">{displayName}</span>
-					</a>
-				{/each}
-				{#each categoriesShowcase as { href, displayName, imgUrl } (displayName)}
-					<a {href} class="snap-start">
-						<img src={imgUrl} alt={displayName} class="w-full">
-						<span>{displayName}</span>
-					</a>
-				{/each}
-			</div>
+		<div class="px-token w-full flex flex-col md:flex-row gap-8">
+			{#each categoriesShowcase as { href, displayName, imgUrl } (displayName)}
+				<a {href} class="flex-1 flex flex-col gap-4">
+					<img src={imgUrl} alt={displayName} class="rounded-container-token">
+					<span class="text-xl font-semibold">{displayName}</span>
+				</a>
+			{/each}
 		</div>
 	</div>
 </section>
