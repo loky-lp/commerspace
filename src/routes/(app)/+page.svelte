@@ -83,8 +83,6 @@
 	</div>
 </section>
 
-<!-- TODO Stop the animation once the user scroll await from the first section -->
-
 <section class="py-20 bg-surface-50-900-token">
 	<div class="max-w-token-center flex flex-col gap-6">
 		<h3 class="px-token text-3xl font-bold">Cerca lo spazio giusto per te</h3>
