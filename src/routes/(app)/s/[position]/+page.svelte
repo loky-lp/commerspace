@@ -1,20 +1,20 @@
 <script lang="ts">
+	import type { PageData } from './$types'
 	import { rateFormat } from '$lib/utils/rate-format'
-	import { page } from '$app/stores'
 
 	import 'iconify-icon'
 	import { Heart } from 'lucide-svelte'
 
-	const size = $page.data.locations.length
-
+	export let data: PageData
+	const { locations } = data
 </script>
 
 <div class="grid md:grid-cols-2">
 	<div class="flex flex-col gap-2 sm:gap-4 p-token">
 		<h2>
-			{size === 1 ? 'È stato trovato un singolo annuncio' : `Sono stati trovati ${size} annunci`}
+			{locations.length === 1 ? 'È stato trovato un singolo annuncio' : `Sono stati trovati ${locations.length} annunci`}
 		</h2>
-		{#each $page.data.locations as { id, type, name, address, rates, services } (id)}
+		{#each locations as { id, type, name, address, images, rates, services } (id)}
 			<a
 				href="/l/{id}"
 				class="flex gap-2 bg-surface-hover-token transition-colors border border-surface-300-600-token rounded-container-token p-4"
