@@ -5,9 +5,12 @@
 	import { SearchFields } from '$lib/components'
 	import { goto } from '$app/navigation'
 
+	import { inView } from '$lib/utils/action'
+
 	export let data: PageData
 	const { heroWords, categories, showcase } = data
 
+	let isRunning = true
 	let typedText = ''
 	let cursor = 0
 
@@ -15,6 +18,13 @@
 	async function typingAnimation() {
 		// eslint-disable-next-line no-constant-condition
 		while (true) {
+			// CAVEAT: The animation has to finish to be stopped
+			if (!isRunning) {
+				// Stopping the flow for a bit to avoid stressing the user system
+				await new Promise(r => setTimeout(r, 100))
+				return
+			}
+
 			if (cursor == heroWords.length) cursor = 0
 			const word = heroWords[cursor]
 
@@ -53,6 +63,9 @@
 </script>
 
 <section
+	use:inView
+	on:viewEnter={() => isRunning = true}
+	on:viewExit={() => isRunning = false}
 	class="flex flex-col items-center justify-center min-h-screen gap-10 sm:gap-16 bg-gradient-to-br from-cyan-500 to-purple-500 p-token"
 >
 	<h2
