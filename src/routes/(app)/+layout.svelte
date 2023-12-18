@@ -96,18 +96,6 @@
 				</a>
 			</svelte:fragment>
 
-			<svelte:fragment>
-				<!-- TODO Better centering, let the sides grow-->
-				<div
-					class="hidden rounded-full md:flex items-center gap-1 bg-surface-50-900-token p-2 border border-surface-300-600-token"
-				>
-					<span class="mx-3">field 1</span>
-					<span class="divider-vertical h-6" />
-					<span class="mx-3">field 2</span>
-					<button class="btn-icon btn-icon-sm variant-filled-primary">O</button>
-				</div>
-			</svelte:fragment>
-
 			<svelte:fragment slot="trail">
 				<!-- TODO Refine -->
 				<button class="md:hidden btn btn-sm" on:click={drawerOpen}>
