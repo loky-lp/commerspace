@@ -1,19 +1,13 @@
 <script lang="ts">
-	// import { useAsyncDataOnMount } from '$lib/utils'
-	// import { trpc } from '$lib/trpc/client'
-	import { page } from '$app/stores'
-	// import { derived } from 'svelte/store'
+	import type { PageData } from './$types'
+
 	import { onMount } from 'svelte'
 	import { SearchFields } from '$lib/components'
 	import { goto } from '$app/navigation'
 
-	const categories = $page.data.categories
+	export let data: PageData
+	const { heroWords, categories, showcase } = data
 
-	const words = [
-		'Ufficio',
-		'Salone eventi',
-		'Coworking',
-	]
 	let typedText = ''
 	let cursor = 0
 
@@ -21,8 +15,8 @@
 	async function typingAnimation() {
 		// eslint-disable-next-line no-constant-condition
 		while (true) {
-			if (cursor == words.length) cursor = 0
-			const word = words[cursor]
+			if (cursor == heroWords.length) cursor = 0
+			const word = heroWords[cursor]
 
 			for (const char of word) {
 				typedText += char
@@ -43,24 +37,6 @@
 	}
 
 	onMount(typingAnimation)
-
-	const categoriesShowcase = [
-		{
-			href: '#TODO',
-			displayName: 'Sale per eventi',
-			imgUrl: 'https://images.unsplash.com/photo-1604999565976-8913ad2ddb7c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=320&h=160&q=80',
-		},
-		{
-			href: '#TODO',
-			displayName: 'Uffici privati',
-			imgUrl: 'https://images.unsplash.com/photo-1540206351-d6465b3ac5c1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=320&h=160&q=80',
-		},
-		{
-			href: '#TODO',
-			displayName: 'Temporary Store',
-			imgUrl: 'https://images.unsplash.com/photo-1622890806166-111d7f6c7c97?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=320&h=160&q=80',
-		},
-	]
 
 	function handleSearch(e: CustomEvent<FormData>) {
 		const position = e.detail.get('position')
@@ -101,7 +77,7 @@
 		<h3 class="px-token text-3xl font-bold">Cerca lo spazio giusto per te</h3>
 		<h4 class="px-token text-xl">Scopri tutte le tipologie di annunci su Commerspace!</h4>
 		<div class="px-token w-full flex flex-col md:flex-row gap-8">
-			{#each categoriesShowcase as { href, displayName, imgUrl } (displayName)}
+			{#each showcase as { href, displayName, imgUrl } (displayName)}
 				<a {href} class="flex-1 flex flex-col gap-4">
 					<img src={imgUrl} alt={displayName} class="rounded-container-token">
 					<span class="text-xl font-semibold">{displayName}</span>
