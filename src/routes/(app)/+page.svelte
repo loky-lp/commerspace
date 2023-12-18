@@ -83,10 +83,11 @@
 	</div>
 </section>
 
-<section class="py-20 bg-surface-50-900-token">
+<!--HACK: Hardcoded value -->
+<section class="py-20 bg-[#DEDBE9]">
 	<div class="max-w-token-center flex flex-col gap-6">
-		<h3 class="px-token text-3xl font-bold">Cerca lo spazio giusto per te</h3>
-		<h4 class="px-token text-xl">Scopri tutte le tipologie di annunci su Commerspace!</h4>
+		<h2 class="px-token text-3xl font-bold">Cerca lo spazio giusto per te</h2>
+		<h3 class="px-token text-xl">Scopri tutte le tipologie di annunci su Commerspace!</h3>
 		<div class="px-token w-full flex flex-col md:flex-row gap-8">
 			{#each showcase as { href, displayName, imgUrl } (displayName)}
 				<a {href} class="flex-1 flex flex-col gap-4">
@@ -95,5 +96,14 @@
 				</a>
 			{/each}
 		</div>
+	</div>
+</section>
+
+<!--HACK: Hardcoded value -->
+<section class="py-20 bg-white">
+	<div class="max-w-token-center flex flex-col gap-6 items-center">
+		<h2 class="text-5xl font-bold">Hai uno spazio commerciale libero?</h2>
+		<h3 class="text-3xl font-medium">Registrati su Commerspace ed inizia a guadagnare!</h3>
+		<a href="#TODO" class="btn variant-filled-primary">Scopri di più</a>
 	</div>
 </section>
