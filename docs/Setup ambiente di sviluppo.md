@@ -13,7 +13,7 @@ Ensure you have docker daemon running
 
 Spin up the database:
 ```shell
-cd cd .devcontainer && docker compose up
+cd .devcontainer && docker compose up
 ```
 > Note: Feel free to stop all and run only the db container, the app devcontainer it's not tested yet
 
