@@ -146,6 +146,9 @@ async function seed() {
 					description: faker.lorem.text(),
 					key: unique(faker.string.uuid),
 
+					position: faker.location.city(),
+					address: faker.location.streetAddress(),
+
 					photos: create(1, 20, faker.image.url),
 					type: {
 						connectOrCreate: {
