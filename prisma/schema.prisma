@@ -1,6 +1,6 @@
 generator client {
 	provider        = "prisma-client-js"
-	previewFeatures = ["fullTextSearch"]
+	previewFeatures = ["fullTextSearch", "postgresqlExtensions"]
 }
 
 datasource db {
@@ -8,6 +8,7 @@ datasource db {
 	url               = env("POSTGRES_PRISMA_URL")
 	directUrl         = env("POSTGRES_URL_NON_POOLING")
 	shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING")
+	extensions        = [postgis]
 }
 
 // Notice:
@@ -239,7 +240,14 @@ model Location {
 	/// ## NOTE: Do not use in the application, this is added or future use.
 	key String @default(dbgenerated("gen_random_uuid()"))
 
-	// TODO Geolocation data
+	/// The location geopsatial data.
+	geoData LocationGeoData?
+
+	/// The location predeterminate position (for now only italian cities)
+	position String
+
+	/// The location display address.
+	address String
 
 	/// The location photos as an imgUrl.
 	photos String[]
@@ -263,6 +271,21 @@ model Location {
 
 	user User         @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 	type LocationType @relation(fields: [typeId], references: [id], onUpdate: Cascade, onDelete: Restrict)
+}
+
+/// The {@link Location} geospatial data.
+/// The two models are separated to allow the creation of a {@link Location} with the prisma api,
+/// prisma is unable to create models with unsupported types.
+model LocationGeoData {
+	/// The {@link LocationGeoData} and {@link Location} id, the same id is used for convenience.
+	id String @id @db.Uuid
+
+	/// The location geopsatial longitude and latitude.
+	lngLat Unsupported("geometry(Point, 3857)")
+
+	location Location @relation(fields: [id], references: [id])
+
+	@@index([lngLat], name: "locationGeoDataLngLat", type: Gist)
 }
 
 /// The interval that determines the billing cicle.
