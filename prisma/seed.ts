@@ -133,6 +133,8 @@ async function seed() {
 
 	startTime = performance.now()
 	process.stdout.write('  └─ Locations  ')
+	// To create a LocationGeoData use the following snippet
+	// await prisma.$queryRaw`INSERT INTO "LocationGeoData" (id, "lngLat") VALUES (${location.id}::UUID, ST_SetSRID(ST_MakePoint(${faker.location.longitude()}, ${faker.location.latitude()}), 3857)) RETURNING id, ST_X("lngLat") as lng, ST_Y("lngLat") as lat`
 
 	await prisma.$transaction(
 		create(300, 600, () => {
