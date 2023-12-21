@@ -18,6 +18,11 @@ function createWithIndex<T>(min: number, max: number, factory: (index: number) =
 	return Array.from({ length: rand(min, max) }, (_, index) => factory(index))
 }
 
+function createFromKeys<K, T>(keyList: K[], factory: (key: K) => T): T[] {
+	return Array.from(keyList, key => factory(key))
+	// return keyList.map(key => factory(key))
+}
+
 let __createdAt = new Date(Date.now() - 7 * 24 * 3600 * 1000) // 7 * 24 h
 
 function nextCreatedAt() {
@@ -133,10 +138,8 @@ async function seed() {
 
 	startTime = performance.now()
 	process.stdout.write('  └─ Locations  ')
-	// To create a LocationGeoData use the following snippet
-	// await prisma.$queryRaw`INSERT INTO "LocationGeoData" (id, "lngLat") VALUES (${location.id}::UUID, ST_SetSRID(ST_MakePoint(${faker.location.longitude()}, ${faker.location.latitude()}), 3857)) RETURNING id, ST_X("lngLat") as lng, ST_Y("lngLat") as lat`
 
-	await prisma.$transaction(
+	const locations = await prisma.$transaction(
 		create(300, 600, () => {
 			const type = faker.commerce.department()
 			return prisma.location.create({
@@ -149,7 +152,7 @@ async function seed() {
 					key: unique(faker.string.uuid),
 
 					position: faker.location.city(),
-					address: faker.location.streetAddress(),
+					address: faker.location.streetAddress({ useFullAddress: true }),
 
 					photos: create(1, 20, faker.image.url),
 					type: {
@@ -163,7 +166,28 @@ async function seed() {
 
 					createdAt: nextCreatedAt(),
 				},
+				select: {
+					id: true,
+				},
 			})
+		}),
+	)
+
+	console.log(printPerformanceDiff(startTime))
+
+	// Create locations geoData
+
+	startTime = performance.now()
+	process.stdout.write('  └─ Locations Geo data  ')
+	// To create a LocationGeoData use the following snippet
+	// await prisma.$queryRaw`INSERT INTO "LocationGeoData" (id, "lngLat") VALUES (${location.id}::UUID, ST_SetSRID(ST_MakePoint(${faker.location.longitude()}, ${faker.location.latitude()}), 3857)) RETURNING id, ST_X("lngLat") as lng, ST_Y("lngLat") as lat`
+
+	await prisma.$transaction(
+		createFromKeys(locations.map(location => location.id), (locationId) => {
+			return prisma.$queryRaw`
+				INSERT INTO "LocationGeoData" (id, "lngLat")
+				VALUES (${locationId}::UUID,
+								ST_SetSRID(ST_MakePoint(${faker.location.longitude()}, ${faker.location.latitude()}), 3857)) RETURNING id, ST_X("lngLat") as lng, ST_Y("lngLat") as lat`
 		}),
 	)
 
