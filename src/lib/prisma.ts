@@ -119,6 +119,40 @@ export const rateIntervals = Object.values(RateInterval) as [keyof typeof RateIn
 // endregion Utility constants
 
 
+// region Utility types
+
+/** Return type for both {@link prisma.location.findUnique} and {@link prisma.location.findFirst} */
+export type LocationFindSingleResult = Awaited<ReturnType<typeof prisma.location.findUnique>>
+/** Return type for both {@link prisma.location.findUniqueOrThrow} and {@link prisma.location.findFirstOrThrow} */
+export type LocationFindSingleOrThrowResult = Awaited<ReturnType<typeof prisma.location.findUniqueOrThrow>>
+/** Return type for {@link prisma.location.findMany} */
+export type LocationFindManyResult = Awaited<ReturnType<typeof prisma.location.findMany>>
+
+// endregion Utility types
+
+
+// region Utility functions
+
+export async function addGeoDataToLocation(location: LocationFindSingleResult | LocationFindSingleOrThrowResult) {
+	const geoData = (await location?.getGeoData())?.[0]
+	return {
+		...location,
+		geoData: {
+			...geoData,
+		},
+	}
+}
+
+// TODO: Test performance of this code, not sure it's the best way to handle the geoData transformation
+export async function addGeoDataToLocations(locations: LocationFindManyResult) {
+	return await Promise.all(
+		locations.map(async location => await addGeoDataToLocation(location)),
+	)
+}
+
+// endregion Utility functions
+
+
 /**
  * Text-Search parser for PostgreSQL
  */
