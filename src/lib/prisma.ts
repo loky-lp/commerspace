@@ -1,5 +1,5 @@
 import type { User as PrismaUser } from '@prisma/client'
-import { Prisma, PrismaClient, UserRole, UserStatus } from '@prisma/client'
+import { Prisma, PrismaClient, RateInterval, UserRole, UserStatus } from '@prisma/client'
 import Tsquery from 'pg-tsquery'
 
 export * from '@prisma/client'
@@ -50,6 +50,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<UserWhereInput, 'id' | 'email'
 
 export const userRoles = Object.values(UserRole) as [keyof typeof UserRole, ...(keyof typeof UserRole)[]]
 export const userStatuses = Object.values(UserStatus) as [keyof typeof UserStatus, ...(keyof typeof UserStatus)[]]
+export const rateIntervals = Object.values(RateInterval) as [keyof typeof RateInterval, ...(keyof typeof RateInterval)[]]
 
 // endregion Utility constants
 
