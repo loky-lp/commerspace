@@ -62,6 +62,21 @@ function extendPrisma(prisma: PrismaClient) {
 				},
 			},
 			result: {
+				location: {
+					// This is currently handled by an async method because extensions on Unsupported types are not supported
+					getGeoData: {
+						needs: { id: true },
+						compute({ id }) {
+							/** The return is an array but the values are limited to 1 */
+							return () =>
+								prisma.$queryRaw<[{ lng: number, lat: number }]>`
+									SELECT ST_X("lngLat") as lng, ST_Y("lngLat") as lat
+									FROM "LocationGeoData"
+									WHERE id = ${id}::UUID
+									LIMIT 1`
+						},
+					},
+				},
 				user: {
 					name: {
 						needs: { firstName: true, lastName: true },
