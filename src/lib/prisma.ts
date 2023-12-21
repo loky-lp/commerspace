@@ -9,9 +9,58 @@ export type PrismaClientEx = ReturnType<typeof extendPrisma>
 
 export type User = PrismaUser & { name: string }
 
+
+// region GeoData types
+
+// NOTE: This type must be kept in sync with the database schema, see: prisma/schema.prisma
+export type LocationGeoData = {
+	id: string
+	lng: number
+	lat: number
+}
+
+export type LocationGeoDataInput = {
+	lng: number
+	lat: number
+}
+
+export type LocationDeleteGeoDataInput = {
+	where: Prisma.LocationWhereUniqueInput
+}
+
+export type LocationCreateGeoDataInput = {
+	where: Prisma.LocationWhereUniqueInput
+	data: LocationGeoDataInput
+}
+
+// endregion GeoData types
+
+
 function extendPrisma(prisma: PrismaClient) {
 	return prisma
 		.$extends({
+			model: {
+				location: {
+					async setGeoData({ where, data: { lng, lat } }: LocationCreateGeoDataInput) {
+						const location = await prisma.location.findUnique({ where, select: { id: true } })
+						if (!location?.id) return null
+						return await prisma.$queryRaw`
+							INSERT INTO "LocationGeoData" (id, "lngLat")
+							VALUES (${location.id}::UUID,
+											ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 3857))
+							RETURNING id, ST_X("lngLat") as lng, ST_Y("lngLat") as lat` as LocationGeoData
+					},
+					async deleteGeoData({ where }: LocationDeleteGeoDataInput) {
+						const location = await prisma.location.findUnique({ where, select: { id: true } })
+						if (!location?.id) return null
+						return await prisma.$queryRaw`
+							DELETE
+							FROM "LocationGeoData"
+							WHERE id = ${location.id}::UUID
+							RETURNING id, ST_X("lngLat") as lng, ST_Y("lngLat") as lat` as LocationGeoData
+					},
+				},
+			},
 			result: {
 				user: {
 					name: {
