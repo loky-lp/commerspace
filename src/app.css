@@ -32,7 +32,7 @@
 			/* TODO Test overflow */
 		overflow-hidden
 		bg-surface-100-800-token
-		rounded-token
+		rounded-container-token
 		bg-red-500;
 
 		/* Because Skeleton UI are geniuses that create the .table class */

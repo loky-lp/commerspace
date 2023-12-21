@@ -102,7 +102,7 @@
 				<!-- User Settings Popup -->
 				<div class="w-max pl-2" data-popup="userSettingsPopup">
 					<div
-						class="rounded-token p-2 bg-surface-100-800-token border-token border-surface-300-600-token flex flex-col divide-y divide-surface-300"
+						class="rounded-container-token p-2 bg-surface-100-800-token border-token border-surface-300-600-token flex flex-col divide-y divide-surface-300"
 					>
 						<div class="flex items-center gap-2 pb-2">
 							<!-- TODO Extract user initials -->
