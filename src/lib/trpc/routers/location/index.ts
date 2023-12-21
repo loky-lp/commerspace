@@ -1,7 +1,7 @@
-import { publicProcedure, router } from '$lib/trpc'
+import { publicOrProtectedProcedure, router } from '$lib/trpc'
 import type { inferRouterInputs, inferRouterOutputs } from '@trpc/server'
 import { TRPCError } from '@trpc/server'
-import { prisma } from '$lib/prisma'
+import { addGeoDataToLocation, prisma } from '$lib/prisma'
 import { z } from 'zod'
 
 export type LocationRouter = typeof locationRouter
@@ -23,17 +23,17 @@ export const locationRouter = router({
 
 	// region Public procedures
 
-	get: publicProcedure
+	get: publicOrProtectedProcedure
 		.input(
 			z.object({
 				id: z.string().uuid(),
 			}),
 		)
 		.query(async ({ input }) => {
+			// TODO: Fetch favorite status
 			const location = await prisma.location.findUnique({
 				where: { id: input.id },
 				include: {
-					type: true,
 					user: true,
 					rates: true,
 					services: true,
@@ -43,7 +43,7 @@ export const locationRouter = router({
 			if (!location)
 				throw new TRPCError({ code: 'NOT_FOUND' })
 
-			return location
+			return await addGeoDataToLocation(location)
 		}),
 
 	// endregion
