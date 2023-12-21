@@ -44,20 +44,20 @@ function extendPrisma(prisma: PrismaClient) {
 					async setGeoData({ where, data: { lng, lat } }: LocationCreateGeoDataInput) {
 						const location = await prisma.location.findUnique({ where, select: { id: true } })
 						if (!location?.id) return null
-						return await prisma.$queryRaw`
+						return await prisma.$queryRaw<LocationGeoData>`
 							INSERT INTO "LocationGeoData" (id, "lngLat")
 							VALUES (${location.id}::UUID,
 											ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 3857))
-							RETURNING id, ST_X("lngLat") as lng, ST_Y("lngLat") as lat` as LocationGeoData
+							RETURNING id, ST_X("lngLat") as lng, ST_Y("lngLat") as lat`
 					},
 					async deleteGeoData({ where }: LocationDeleteGeoDataInput) {
 						const location = await prisma.location.findUnique({ where, select: { id: true } })
 						if (!location?.id) return null
-						return await prisma.$queryRaw`
+						return await prisma.$queryRaw<LocationGeoData>`
 							DELETE
 							FROM "LocationGeoData"
 							WHERE id = ${location.id}::UUID
-							RETURNING id, ST_X("lngLat") as lng, ST_Y("lngLat") as lat` as LocationGeoData
+							RETURNING id, ST_X("lngLat") as lng, ST_Y("lngLat") as lat`
 					},
 				},
 			},
