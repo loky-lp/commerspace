@@ -36,7 +36,7 @@ export const locationRouter = router({
 
 			const locations = await prisma.location.findMany({
 				where: {
-					position,
+					positionId: position,
 				},
 				include: {
 					rates: true,

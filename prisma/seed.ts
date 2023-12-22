@@ -141,6 +141,7 @@ async function seed() {
 
 	const locations = await prisma.$transaction(
 		create(300, 600, () => {
+			const position = faker.location.city()
 			const type = faker.commerce.department()
 			return prisma.location.create({
 				data: {
@@ -151,7 +152,12 @@ async function seed() {
 					description: faker.lorem.text(),
 					key: unique(faker.string.uuid),
 
-					position: faker.location.city(),
+					position: {
+						connectOrCreate: {
+							create: { id: position, createdAt: nextCreatedAt() },
+							where: { id: position },
+						}
+					},
 					address: faker.location.streetAddress({ useFullAddress: true }),
 
 					photos: create(1, 20, faker.image.url),

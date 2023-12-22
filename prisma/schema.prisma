@@ -211,6 +211,18 @@ model Session {
 // TODO Evaluate where to use soft deletition on following models
 // TODO Add: createdAt DateTime @default(now()) updatedAt DateTime @default(now()) @updatedAt
 
+/// The {@link Location} position, this support only one level like a city, this schema does not support nested positions.
+model LocationPosition {
+	id String @id
+
+	/// The {@link LocationType} creation date.
+	createdAt DateTime @default(now())
+	/// The {@link LocationType} last update date.
+	updatedAt DateTime @default(now()) @updatedAt
+
+	locations Location[]
+}
+
 /// The {@link Location} type (restaurant, office, etc..), this is a table and not an enum to allow addition at runtime.
 model LocationType {
 	id String @id
@@ -244,7 +256,7 @@ model Location {
 	geoData LocationGeoData?
 
 	/// The location predeterminate position (for now only italian cities)
-	position String
+	positionId String
 
 	/// The location display address.
 	address String
@@ -269,8 +281,9 @@ model Location {
 	/// The {@link Location} deletition date for soft deletition.
 	deletedAt DateTime?
 
-	user User         @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-	type LocationType @relation(fields: [typeId], references: [id], onUpdate: Cascade, onDelete: Restrict)
+	user     User             @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+	position LocationPosition @relation(fields: [positionId], references: [id], onUpdate: Cascade, onDelete: Restrict)
+	type     LocationType     @relation(fields: [typeId], references: [id], onUpdate: Cascade, onDelete: Restrict)
 }
 
 /// The {@link Location} geospatial data.
