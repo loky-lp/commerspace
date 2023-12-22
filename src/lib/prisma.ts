@@ -133,20 +133,24 @@ export type LocationFindManyResult = Awaited<ReturnType<typeof prisma.location.f
 
 // region Utility functions
 
-export async function addGeoDataToLocation(location: LocationFindSingleResult | LocationFindSingleOrThrowResult) {
+export async function addGeoDataToLocation<Location extends LocationFindSingleResult | LocationFindSingleOrThrowResult>(location: Location) {
 	const geoData = (await location?.getGeoData())?.[0]
 	return {
 		...location,
 		geoData: {
 			...geoData,
 		},
-	}
+	} satisfies Location
 }
 
 // TODO: Test performance of this code, not sure it's the best way to handle the geoData transformation
-export async function addGeoDataToLocations(locations: LocationFindManyResult) {
+export async function addGeoDataToLocations<Locations extends LocationFindManyResult>(locations: Locations) {
 	return await Promise.all(
-		locations.map(async location => await addGeoDataToLocation(location)),
+		// HACK: Instead of using [0] to force access the first element we should use a safer option,
+		// but ArrayElement destroys the types for some reason
+		locations.map<Promise<Locations[0]>>(
+			async location => await addGeoDataToLocation<Locations[0]>(location)
+		),
 	)
 }
 
