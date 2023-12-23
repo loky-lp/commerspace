@@ -1,7 +1,7 @@
 import { protectedProcedure, publicOrProtectedProcedure, router } from '$lib/trpc'
 import type { inferRouterInputs, inferRouterOutputs } from '@trpc/server'
 import { TRPCError } from '@trpc/server'
-import { addGeoDataToLocation, addGeoDataToLocations, prisma } from '$lib/prisma'
+import { addGeoDataToLocation, addGeoDataToLocations, prisma, Prisma } from '$lib/prisma'
 import { z } from 'zod'
 
 export type LocationRouter = typeof locationRouter
@@ -31,17 +31,25 @@ export const locationRouter = router({
 				position: z.string().min(3),
 			}),
 		)
-		.query(async ({ input: { position } }) => {
-			// TODO: Add favorite field to the location if user is authenticated
+		.query(async ({ ctx: { user }, input: { position } }) => {
+			// TODO: Add check or error catch in case of missing position
+			const include: Prisma.LocationInclude = {
+				rates: true,
+				services: true,
+			}
+
+			if (user) {
+				include.userData = {
+					where: { userId: user.id },
+				}
+			}
 
 			const locations = await prisma.location.findMany({
 				where: {
 					positionId: position,
+					deletedAt: null,
 				},
-				include: {
-					rates: true,
-					services: true,
-				},
+				include,
 			})
 
 			return await addGeoDataToLocations(locations)
