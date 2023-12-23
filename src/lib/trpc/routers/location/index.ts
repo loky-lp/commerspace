@@ -1,4 +1,4 @@
-import { publicOrProtectedProcedure, router } from '$lib/trpc'
+import { protectedProcedure, publicOrProtectedProcedure, router } from '$lib/trpc'
 import type { inferRouterInputs, inferRouterOutputs } from '@trpc/server'
 import { TRPCError } from '@trpc/server'
 import { addGeoDataToLocation, addGeoDataToLocations, prisma } from '$lib/prisma'
@@ -69,6 +69,36 @@ export const locationRouter = router({
 				throw new TRPCError({ code: 'NOT_FOUND' })
 
 			return await addGeoDataToLocation(location)
+		}),
+
+	userData: protectedProcedure
+		.input(
+			z.object({
+				locationId: z.string().uuid(),
+				isFavorite: z.boolean().optional(),
+			}),
+		)
+		.mutation(async ({ ctx: { user }, input: { locationId, isFavorite } }) => {
+			return await prisma.userLocationData.upsert({
+				select: {
+					isFavorite: true,
+				},
+				where: {
+					userId_locationId: {
+						locationId,
+						userId: user.id,
+					},
+				},
+				create: {
+					locationId,
+					userId: user.id,
+
+					isFavorite: isFavorite ?? false,
+				},
+				update: {
+					isFavorite,
+				},
+			})
 		}),
 
 	// endregion
