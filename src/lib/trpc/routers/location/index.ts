@@ -32,7 +32,13 @@ export const locationRouter = router({
 			}),
 		)
 		.query(async ({ ctx: { user }, input: { position } }) => {
-			// TODO: Add check or error catch in case of missing position
+			const positionCheck = await prisma.locationPosition.findUnique({
+				where: { id: position },
+			})
+
+			if (!positionCheck)
+				throw new TRPCError({ code: 'NOT_FOUND' })
+
 			const include: Prisma.LocationInclude = {
 				rates: true,
 				services: true,

@@ -1,17 +1,21 @@
 import type { PageServerLoad } from './$types'
 import { trpc } from '$lib/trpc/client'
+import { error } from '@sveltejs/kit'
+import { isTRPCClientError } from '$lib/utils/error'
 
 export const load: PageServerLoad = async ({ fetch, url, params: { position } }) => {
-	// Check if position is a valid position, if not, return 404
+	try {
+		return {
+			categories: await trpc({ fetch, url }).category.getAll.query({}),
+			// TODO: Pass queryParameters
+			locations: await trpc({ fetch, url }).location.search.query({ position }),
+		}
+	} catch (e: unknown) {
+		if (isTRPCClientError(e) && e.data?.code === 'NOT_FOUND') {
+			throw error(404, 'invalid position')
+		}
 
-	// Call trpc to get the data for the position
-
-	// Pass url.searchParams to trpc to filter the data
-
-	return {
-		categories: await trpc({ fetch, url }).category.getAll.query({}),
-		// TODO: Pass queryParameters
-		locations: await trpc({ fetch, url }).location.search.query({ position }),
+		throw error(500, 'Error fetching locations')
 	}
 }
 
