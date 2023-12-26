@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient, UserRole, UserStatus } from '@prisma/client'
+import { Prisma, PrismaClient, RateInterval, UserRole, UserStatus } from '@prisma/client'
 import { faker } from '@faker-js/faker'
 import { createPasswordHash } from './lib'
 
@@ -134,6 +134,17 @@ async function seed() {
 
 	console.log(printPerformanceDiff(startTime))
 
+	// // Create location's Service types
+	//
+	// startTime = performance.now()
+	// process.stdout.write('  └─ Location\'s Service types  ')
+	//
+	// await prisma.service.upsert({
+	// 	data: create(50, 50, () => ({})),
+	// })
+	//
+	// console.log(printPerformanceDiff(startTime))
+
 	// Create locations
 
 	startTime = performance.now()
@@ -168,7 +179,28 @@ async function seed() {
 						},
 					},
 
-					// TODO Create services and rates
+					rates: {
+						createMany: {
+							data: create(1, 3, () => ({
+								quantity: faker.helpers.arrayElement([1, 2, 3] as const),
+								interval: faker.helpers.enumValue(RateInterval),
+								price: faker.number.int({ min: 20, max: 3000 }),
+								createdAt: nextCreatedAt(),
+							})),
+						},
+					},
+					services: {
+						// TODO: Create many locationsServices at once
+						create: {
+							service: {
+								connectOrCreate: {
+									create: { displayName: type, createdAt: nextCreatedAt() },
+									where: { displayName: type },
+								},
+							},
+							createdAt: nextCreatedAt(),
+						},
+					},
 
 					createdAt: nextCreatedAt(),
 				},
