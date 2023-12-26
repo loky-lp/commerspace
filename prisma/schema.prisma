@@ -344,8 +344,17 @@ model LocationRate {
 model Service {
 	id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
-	// TODO Define Service model
+	// TODO Refine Service model
+	displayName String
+
+	/// The {@link Service} creation date.
+	createdAt DateTime @default(now())
+	/// The {@link Service} last update date.
+	updatedAt DateTime @default(now()) @updatedAt
+
 	locations LocationService[]
+
+	@@unique([displayName])
 }
 
 /// The {@link Location} {@link Service} that specify the desired info.
