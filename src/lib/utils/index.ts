@@ -96,3 +96,27 @@ export function createPagination<F extends PaginationFilters, D extends DataWith
 		},
 	}
 }
+
+/**
+ * Create a debounced function of the given callback
+ *
+ * @example
+ * 	function myLog(name: string) {
+ * 		console.log(`Hey, log -> ${name}`)
+ * 	}
+ * 	const debouncedMyLog = createDebounce<typeof myLog>(myLog, 500)
+ * 	$: reactiveVar && debouncedMyLog('some data')
+ *
+ * @param callback
+ * @param wait
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function createDebounce<C extends (...args: any[]) => void>(callback: C, wait: number = 300) {
+	let timeout: ReturnType<typeof setTimeout>
+
+	// Return the function that
+	return (...args: Parameters<C>) => {
+		clearTimeout(timeout)
+		timeout = setTimeout(() => callback(...args), wait)
+	}
+}
