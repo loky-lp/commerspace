@@ -194,7 +194,11 @@ async function seed() {
 						create: {
 							service: {
 								connectOrCreate: {
-									create: { displayName: type, createdAt: nextCreatedAt() },
+									create: {
+										displayName: type,
+										icon: 'lucide:' + faker.helpers.arrayElement(['shopping-cart', 'shirt', 'coffee', 'ear-off']),
+										createdAt: nextCreatedAt()
+									},
 									where: { displayName: type },
 								},
 							},
