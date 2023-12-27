@@ -41,7 +41,11 @@ export const locationRouter = router({
 
 			const include: Prisma.LocationInclude = {
 				rates: true,
-				services: true,
+				services: {
+					include: {
+						service: true,
+					},
+				},
 			}
 
 			if (user) {

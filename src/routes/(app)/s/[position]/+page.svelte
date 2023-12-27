@@ -115,9 +115,9 @@
 						{/each}
 					</p>
 					<p class="flex flex-wrap gap-2">
-						{#each services as service}
+						{#each services as { id, service: { displayName, icon } } (id)}
 							<span class="chip text-sm flex gap-2">
-								<iconify-icon icon="lucide:heart" /> servizio
+								<iconify-icon class="text-primary-600-300-token" {icon} /> {displayName}
 							</span>
 						{/each}
 					</p>
