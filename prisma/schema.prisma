@@ -347,6 +347,9 @@ model Service {
 	// TODO Refine Service model
 	displayName String
 
+	/// The {@link Service} icon defined as an iconify id (ex: lucide:shopping-cart).
+	icon String
+
 	/// The {@link Service} creation date.
 	createdAt DateTime @default(now())
 	/// The {@link Service} last update date.
