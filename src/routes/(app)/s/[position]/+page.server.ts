@@ -7,6 +7,7 @@ export const load: PageServerLoad = async ({ fetch, url, params: { position } })
 	try {
 		return {
 			categories: await trpc({ fetch, url }).category.getAll.query({}),
+			positions: await trpc({ fetch, url }).position.getAll.query({}),
 			// TODO: Pass queryParameters
 			locations: await trpc({ fetch, url }).location.search.query({ position }),
 		}

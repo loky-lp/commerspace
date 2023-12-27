@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte'
+	import type { AutocompleteOption, PopupSettings } from '@skeletonlabs/skeleton'
+	import { Autocomplete, popup } from '@skeletonlabs/skeleton'
 
 	const dispatch = createEventDispatcher<{
 		submit: FormData
@@ -25,6 +27,19 @@
 		data.append('checkOut', checkOut.toISOString())
 		dispatch('submit', data)
 	}
+
+	let popupSettings: PopupSettings = {
+		event: 'focus-click',
+		target: 'popupAutocomplete',
+		placement: 'bottom',
+	}
+
+	export let positions: { id: string }[]
+	$: positionOptions = positions.map<AutocompleteOption<string, never>>(({ id }) => ({ value: id, label: id }))
+
+	function handleSelection(event: CustomEvent<AutocompleteOption>): void {
+		position = event.detail.label
+	}
 </script>
 
 <form
@@ -36,8 +51,26 @@
 			<option value={id} class="capitalize">{id}</option>
 		{/each}
 	</select>
-	<!-- TODO: Add autocomplete -->
-	<input bind:value={position} class="input" placeholder="Dove" required type="text">
+	<input
+		autocomplete="off"
+		bind:value={position}
+		class="input"
+		name="position-search"
+		placeholder="Dove"
+		required
+		type="search"
+		use:popup={popupSettings}
+	/>
+	<div class="card w-full max-w-sm p-2 pr-1 overflow-y-hidden" data-popup="popupAutocomplete" tabindex="-1">
+		<div class="max-h-48 overflow-y-auto pr-1">
+			<Autocomplete
+				bind:input={position}
+				emptyState="Nessuna posizione trovata"
+				on:selection={handleSelection}
+				options={positionOptions}
+			/>
+		</div>
+	</div>
 	<input class="input" placeholder="Picker" required type="text">
 	<button class="btn variant-filled-primary" type="submit">Carica</button>
 </form>

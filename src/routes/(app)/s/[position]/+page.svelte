@@ -10,7 +10,7 @@
 	import { Heart } from 'lucide-svelte'
 
 	export let data: PageData
-	const { categories } = data
+	const { categories, positions } = data
 	// This approach is suboptimal when the page contains a lot of locations,
 	// for fine-grained reactivity we have to wait for Svelte 5
 	let { locations } = data
@@ -69,7 +69,7 @@
 
 <div class="grid md:grid-cols-2">
 	<div class="flex flex-col gap-2 sm:gap-4 p-token">
-		<SearchFields {categories} on:submit={handleSearch} />
+		<SearchFields {categories} {positions} on:submit={handleSearch} />
 		<h2 class="text-xl font-bold">
 			{locations.length === 1 ? 'È stato trovato un singolo annuncio' : `Sono stati trovati ${locations.length} annunci`}
 		</h2>

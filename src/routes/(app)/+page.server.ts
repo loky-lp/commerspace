@@ -5,6 +5,7 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 	return {
 		heroWords: ['Ufficio', 'Salone eventi', 'Coworking'],
 		categories: await trpc({ fetch, url }).category.getAll.query({}),
+		positions: await trpc({ fetch, url }).position.getAll.query({}),
 		showcase: [
 			{
 				href: '#TODO',

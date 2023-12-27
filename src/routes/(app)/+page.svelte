@@ -8,7 +8,7 @@
 	import { inView } from '$lib/utils/action'
 
 	export let data: PageData
-	const { heroWords, categories, showcase } = data
+	const { heroWords, categories, positions, showcase } = data
 
 	let isRunning = true
 	let typedText = ''
@@ -79,7 +79,7 @@
 	<div
 		class="bg-surface-900 border-token border-surface-500 rounded-[32px] md:rounded-full w-[clamp(0px,50ch,100vw)] md:w-[clamp(40ch,100ch,100vw)] p-4"
 	>
-		<SearchFields {categories} on:submit={handleSearch} />
+		<SearchFields {categories} {positions} on:submit={handleSearch} />
 	</div>
 </section>
 
