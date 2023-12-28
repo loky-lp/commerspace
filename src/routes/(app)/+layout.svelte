@@ -3,11 +3,12 @@
 	import { AppBar, AppShell, Avatar, Drawer, getDrawerStore, popup, storePopup } from '@skeletonlabs/skeleton'
 	import { arrow, autoUpdate, computePosition, flip, offset, shift } from '@floating-ui/dom'
 	import { page } from '$app/stores'
+	import { browser } from '$app/environment'
 	import { signOut } from '@auth/sveltekit/client'
-	import { onMount } from 'svelte'
 	import { getIsScrolled, setIsScrolled } from '$lib/context'
 
 	$: isIndexPage = $page.url.pathname == '/'
+	$: isPageSizeFixed = $page.url.pathname.startsWith('/s/')
 	$: user = $page.data.session?.user
 
 	const drawerStore = getDrawerStore()
@@ -31,8 +32,8 @@
 
 	setIsScrolled()
 	const isScrolled = getIsScrolled()
-	onMount(() => {
-		if (isIndexPage) {
+	$: {
+		if (browser && isIndexPage) {
 			// HACK: This is the css id used by Skeleton, when the library updates this without notice this breaks easily
 			const pageContent = document.getElementById('page') as HTMLDivElement
 
@@ -40,7 +41,7 @@
 				isScrolled.set(pageContent.scrollTop != 0)
 			}, { passive: true })
 		}
-	})
+	}
 
 	$: headerProps = {
 		slotHeader: isIndexPage ? 'fixed w-full' : '',
@@ -63,6 +64,28 @@
 				? 'text-on-primary-token'
 				: 'text-on-surface-token',
 	}
+
+	let headerElement: HTMLDivElement
+
+	function updateHeaderOffset(): void {
+		if (!headerElement) return
+
+		document.documentElement.style.setProperty('--header-offset', headerElement.offsetHeight + 'px')
+	}
+
+	$: {
+		if (browser) {
+			if (isPageSizeFixed) {
+				console.log('clearing and recalling the handler', isPageSizeFixed)
+				window.removeEventListener('resize', updateHeaderOffset)
+				window.addEventListener('resize', updateHeaderOffset)
+				updateHeaderOffset()
+			} else {
+				console.log('clearing the handler', isPageSizeFixed)
+				window.removeEventListener('resize', updateHeaderOffset)
+			}
+		}
+	}
 </script>
 
 <Drawer opacityTransition={false} position="right">
@@ -83,7 +106,7 @@
 	slotHeader={headerProps.slotHeader}
 	slotSidebarLeft="bg-surface-500/5 w-56 p-4"
 >
-	<svelte:fragment slot="header">
+	<div bind:this={headerElement} slot="header">
 		<AppBar
 			background={headerProps.background}
 			class={headerProps.class}
@@ -146,7 +169,7 @@
 				{/if}
 			</svelte:fragment>
 		</AppBar>
-	</svelte:fragment>
+	</div>
 
 	<!-- ---- / ---- -->
 	<slot />

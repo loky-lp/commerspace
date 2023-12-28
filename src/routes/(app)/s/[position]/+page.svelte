@@ -125,7 +125,11 @@
 			</a>
 		{/each}
 	</div>
-	<div>
-		mappa
+
+	<!-- Map -->
+	<div class="sticky top-0 h-[calc(100vh-var(--header-offset))]">
+		<Map>
+			<Marker />
+		</Map>
 	</div>
 </div>
