@@ -19,11 +19,14 @@ const intervalPluralMap = {
 	['YEAR']: 'anni',
 }
 
+// HACK: Hardcoded locale and currency
+const nf = new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' })
+
 export function rateFormat({ price, interval, quantity }: LocationRate) {
-	console.log({ price, interval, quantity })
+	const displayPrice = nf.format(price / 100)
 	// HACK: The platform only supports one currency, the moment we need to support more currencies, we need to change this
 	if (quantity === 1)
-		return `${price} €/${intervalMap[interval]}`
+		return `${displayPrice} /${intervalMap[interval]}`
 
-	return `${price} €/ ${quantity} ${intervalPluralMap[interval]}`
+	return `${displayPrice} / ${quantity} ${intervalPluralMap[interval]}`
 }

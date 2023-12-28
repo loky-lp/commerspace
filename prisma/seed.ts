@@ -184,7 +184,7 @@ async function seed() {
 							data: create(1, 3, () => ({
 								quantity: faker.helpers.arrayElement([1, 2, 3] as const),
 								interval: faker.helpers.enumValue(RateInterval),
-								price: faker.number.int({ min: 20, max: 3000 }),
+								price: faker.number.int({ min: 200, max: 300000 }),
 								createdAt: nextCreatedAt(),
 							})),
 						},
