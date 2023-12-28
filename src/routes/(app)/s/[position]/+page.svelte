@@ -68,11 +68,14 @@
 </script>
 
 <div class="grid md:grid-cols-2">
+	<!-- Location list -->
 	<div class="flex flex-col gap-2 sm:gap-4 p-token">
-		<SearchFields {categories} {positions} on:submit={handleSearch} />
+		<SearchFields {categories} on:submit={handleSearch} {positions} />
 		<h2 class="text-xl font-bold">
 			{locations.length === 1 ? 'È stato trovato un singolo annuncio' : `Sono stati trovati ${locations.length} annunci`}
 		</h2>
+
+		<!-- Location element -->
 		{#each locations as { id, typeId, displayName, address, photos, rates, services, userData } (id)}
 			<a
 				href="/l/{id}"
@@ -124,6 +127,7 @@
 				</div>
 			</a>
 		{/each}
+
 	</div>
 
 	<!-- Map -->
