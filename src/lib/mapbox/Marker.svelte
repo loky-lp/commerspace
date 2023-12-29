@@ -7,10 +7,12 @@
 
 	let marker: Marker
 
+	export let lngLat: [number, number]
+
 	onMount(() => {
 		console.log('marker onMount', { $map, marker })
 		marker = new Marker({})
-		marker.setLngLat([-74.5, 40])
+		marker.setLngLat(lngLat)
 
 		return () => {
 			console.log('marker destroy')
