@@ -19,6 +19,8 @@ export type LocationGeoData = {
 	lat: number
 }
 
+export type PublicLocationGeoData = Omit<LocationGeoData, 'id'>
+
 export type LocationGeoDataInput = {
 	lng: number
 	lat: number
@@ -69,7 +71,7 @@ function extendPrisma(prisma: PrismaClient) {
 						compute({ id }) {
 							/** The return is an array but the values are limited to 1 */
 							return () =>
-								prisma.$queryRaw<[{ lng: number, lat: number }]>`
+								prisma.$queryRaw<[PublicLocationGeoData]>`
 									SELECT ST_X("lngLat") as lng, ST_Y("lngLat") as lat
 									FROM "LocationGeoData"
 									WHERE id = ${id}::UUID
@@ -137,19 +139,21 @@ export async function addGeoDataToLocation<Location extends LocationFindSingleRe
 	const geoData = (await location?.getGeoData())?.[0]
 	return {
 		...location,
-		geoData: {
-			...geoData,
-		},
-	} satisfies Location
+		geoData,
+		// HACK: this dirty hack!!!
+		// We should just let typescript infer the getGeoData return type,
+		// but things are broken when working with generics extending from unions!!!
+	} as Location & { geoData: PublicLocationGeoData | undefined }
 }
 
 // TODO: Test performance of this code, not sure it's the best way to handle the geoData transformation
 export async function addGeoDataToLocations<Locations extends LocationFindManyResult>(locations: Locations) {
-	return await Promise.all(
+	// HACK: this dirty hack!!! Typescript generics are so broken!!!
+	return await Promise.all<Promise<Locations[0] & { geoData: PublicLocationGeoData | undefined }>>(
 		// HACK: Instead of using [0] to force access the first element we should use a safer option,
 		// but ArrayElement destroys the types for some reason
-		locations.map<Promise<Locations[0]>>(
-			async location => await addGeoDataToLocation<Locations[0]>(location)
+		locations.map<Promise<Locations[0] & { geoData: PublicLocationGeoData | undefined }>>(
+			async location => await addGeoDataToLocation<Locations[0]>(location) as Locations[0] & { geoData: PublicLocationGeoData | undefined }
 		),
 	)
 }
