@@ -120,3 +120,23 @@ export function createDebounce<C extends (...args: any[]) => void>(callback: C, 
 		timeout = setTimeout(() => callback(...args), wait)
 	}
 }
+
+const uniqueStringSet = new Set<string>()
+
+export function unique(factory: () => string) {
+	let value: string
+
+	do {
+		value = factory()
+	}
+	while (uniqueStringSet.has(value))
+
+	uniqueStringSet.add(value)
+	return value
+}
+
+export function uniqueRandomString() {
+	return unique(() => {
+		return Math.random().toString(36).substring(2)
+	})
+}
