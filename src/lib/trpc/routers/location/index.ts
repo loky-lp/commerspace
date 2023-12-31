@@ -62,7 +62,7 @@ export const locationRouter = router({
 				include,
 			})
 
-			return await addGeoDataToLocations(locations)
+			return await addGeoDataToLocations<typeof locations>(locations)
 		}),
 
 	/** TODO DOC: Procedure for public location page */
