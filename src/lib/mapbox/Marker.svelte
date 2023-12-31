@@ -25,4 +25,7 @@
 		if (map && marker)
 			marker.addTo(map)
 	})
+
+	// TODO: Add onDestroy and map changing logic, as of now markers are added to the map on every map change,but never removed
+	// is not much of a problem as the old map doesn't exist anymore, but this could lead to memory leaks
 </script>
