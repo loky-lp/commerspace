@@ -8,12 +8,17 @@
 
 	import 'iconify-icon'
 	import { Heart } from 'lucide-svelte'
+	import { Map, Marker } from '$lib/mapbox'
 
 	export let data: PageData
 	const { categories, positions } = data
 	// This approach is suboptimal when the page contains a lot of locations,
 	// for fine-grained reactivity we have to wait for Svelte 5
 	let { locations } = data
+
+	let lng = 0
+	let lat = 0
+	let zoom = 0
 
 	$: user = $page.data.session?.user
 
@@ -128,12 +133,18 @@
 			</a>
 		{/each}
 
+		<!-- Map controls -->
+		<input type="range" name="aaa" id="" bind:value={lng} step="1" min="-180" max="180"> {lng}
+		<input type="range" name="aaa" id="" bind:value={lat} step="1" min="-90" max="90"> {lat}
+		<input type="range" name="aaa" id="" bind:value={zoom} step="0.01" min="0" max="15"> {zoom}
 	</div>
 
 	<!-- Map -->
 	<div class="sticky top-0 h-[calc(100vh-var(--header-offset))]">
-		<Map>
-			<Marker />
+		<Map bind:lng={lng} bind:lat={lat} bind:zoom={zoom}>
+			{#each locations as { id, geoData: { lng, lat } } (id)}
+				<Marker lngLat={[lng, lat]} />
+			{/each}
 		</Map>
 	</div>
 </div>
