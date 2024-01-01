@@ -111,6 +111,14 @@ model User {
 	/// The {@link Location} data relative to the user, such as favorite locations.
 	locationData UserLocationData[]
 
+	reservations Reservation[]
+
+	orders Order[] @relation("Bought")
+	// soldOrders Order[] @relation("Seller")
+
+	orderNotes OrderNote[]
+	// createdOrderInstallments OrderInstallment[]
+
 	// billing details
 	//  billing UserBillingData?
 	@@index(createdAt)
@@ -277,6 +285,8 @@ model Location {
 	/// The {@link Service} offered by the location.
 	services LocationService[]
 
+	reservations Reservation[]
+
 	/// The {@link User} data relative to the location, such as favorite locations.
 	userData UserLocationData[]
 
@@ -397,6 +407,168 @@ model UserLocationData {
 	location Location @relation(fields: [locationId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 
 	@@unique([userId, locationId])
+	@@index(userId)
+	@@index(locationId)
+}
+
+enum OrderType {
+	NONE
+}
+
+enum OrderPaymentType {
+	STRIPE
+	PAYPAL
+	WIRE_TRANSFER
+	CRYPTO
+	CUSTOM
+}
+
+enum OrderPaymentStatus {
+	UNPAID
+	PAID
+	REFUNDED
+}
+
+enum OrderStatus {
+	PENDING
+	CLOSED
+}
+
+model Order {
+	id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+	/// Auto increment order id
+	orderId Int @unique @default(autoincrement())
+
+	// stripeSessionId String? @unique
+
+	/// The {@link User} that have made the order.
+	userId String @db.Uuid
+
+	// the name of the order
+	name String
+
+	// currency Currency
+
+	// isSuspended Boolean @default(false)
+
+	closedAt DateTime?
+
+	paymentType   OrderPaymentType
+	paymentStatus OrderPaymentStatus
+
+	type   OrderType
+	status OrderStatus
+
+	createdAt DateTime  @unique @default(now())
+	updatedAt DateTime  @default(now()) @updatedAt
+	deletedAt DateTime?
+
+	user User @relation("Bought", fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+	// trackingData OrderTrackingData?
+
+	billing  OrderBillingData?
+	shipping OrderShippingData?
+
+	notes OrderNote[]
+	// installments OrderInstallment[]
+
+	reservation Reservation?
+	// subscriptionUnlocked Subscription[]
+
+	// @@index(sellerId)
+	@@index(userId)
+	// @@index(checkoutId)
+}
+
+model OrderNote {
+	id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+	orderId String @db.Uuid
+
+	/// The {@link User} that have made the note.
+	userId String @db.Uuid
+
+	note String
+
+	createdAt DateTime  @default(now())
+	updatedAt DateTime  @default(now()) @updatedAt
+	deletedAt DateTime?
+
+	order Order @relation(fields: [orderId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+	user  User  @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+	@@index(orderId)
+	@@index(userId)
+}
+
+model OrderBillingData {
+	id String @id @db.Uuid
+
+	/// Ragione Sociale
+	businessName String
+
+	/// Partita IVA (optional)
+	vat String
+
+	/// Codice Fiscale
+	taxCode String
+
+	/// Via, street
+	street String
+
+	/// Città
+	city String
+
+	/// Provincia / Stato Estero
+	state String
+
+	/// CAP
+	postalCode String
+
+	/// Paese
+	country String
+
+	createdAt DateTime @default(now())
+
+	order Order @relation(fields: [id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+model OrderShippingData {
+	id String @id @db.Uuid
+
+	firstName  String
+	lastName   String
+	street     String
+	city       String
+	state      String
+	postalCode String
+	country    String
+
+	createdAt DateTime @default(now())
+
+	order Order @relation(fields: [id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+model Reservation {
+	id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+	userId     String  @db.Uuid
+	locationId String  @db.Uuid
+	orderId    String? @db.Uuid
+
+	checkIn  DateTime
+	checkOut DateTime
+
+	createdAt DateTime @default(now())
+
+	user     User     @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+	location Location @relation(fields: [locationId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+	order    Order?   @relation(fields: [orderId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+	@@unique([userId, locationId])
+	@@unique([orderId])
 	@@index(userId)
 	@@index(locationId)
 }
