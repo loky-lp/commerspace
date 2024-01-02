@@ -1,4 +1,14 @@
-import { Prisma, PrismaClient, RateInterval, UserRole, UserStatus } from '@prisma/client'
+import {
+	OrderPaymentStatus,
+	OrderPaymentType,
+	OrderStatus,
+	OrderType,
+	Prisma,
+	PrismaClient,
+	RateInterval,
+	UserRole,
+	UserStatus,
+} from '@prisma/client'
 import { faker } from '@faker-js/faker'
 import { createPasswordHash } from './lib'
 
@@ -231,6 +241,56 @@ async function seed() {
 				VALUES (${locationId}::UUID,
 								ST_SetSRID(ST_MakePoint(${faker.location.longitude()}, ${faker.location.latitude()}), 3857)) RETURNING id, ST_X("lngLat") as lng, ST_Y("lngLat") as lat`
 		}),
+	)
+
+	console.log(printPerformanceDiff(startTime))
+
+	// Create orders and reservations
+
+	startTime = performance.now()
+	process.stdout.write('  └─ Orders and Reservations  ')
+
+	const users = (await prisma.user.findMany({ select: { id: true } })).map(({ id }) => id)
+	const locationIds = locations.map(({ id }) => id)
+
+	console.log('asdas')
+	console.log(users.length)
+	console.log(locationIds.length)
+
+	await prisma.$transaction(
+		create(300, 600, () =>
+			prisma.order.create({
+				data: {
+					user: {
+						connect: { id: faker.helpers.arrayElement(users) },
+					},
+
+					name: faker.lorem.sentence(5),
+
+					type: faker.helpers.enumValue(OrderType),
+					status: faker.helpers.enumValue(OrderStatus),
+					paymentType: faker.helpers.enumValue(OrderPaymentType),
+					paymentStatus: faker.helpers.enumValue(OrderPaymentStatus),
+
+					// Connected reservation
+					reservation: {
+						create: {
+							location: {
+								connect: { id: faker.helpers.arrayElement(locationIds) },
+							},
+							user: {
+								connect: { id: faker.helpers.arrayElement(users) },
+							},
+
+							checkIn: faker.date.past({ years: 1 }),
+							checkOut: faker.date.future({ years: 1 }),
+						},
+					},
+
+					createdAt: nextCreatedAt(),
+				},
+			}),
+		),
 	)
 
 	console.log(printPerformanceDiff(startTime))
