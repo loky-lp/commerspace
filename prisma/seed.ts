@@ -177,7 +177,7 @@ async function seed() {
 						connectOrCreate: {
 							create: { id: position, createdAt: nextCreatedAt() },
 							where: { id: position },
-						}
+						},
 					},
 					address: faker.location.streetAddress({ useFullAddress: true }),
 
@@ -207,7 +207,7 @@ async function seed() {
 									create: {
 										displayName: type,
 										icon: 'lucide:' + faker.helpers.arrayElement(['shopping-cart', 'shirt', 'coffee', 'ear-off']),
-										createdAt: nextCreatedAt()
+										createdAt: nextCreatedAt(),
 									},
 									where: { displayName: type },
 								},
@@ -252,10 +252,6 @@ async function seed() {
 
 	const users = (await prisma.user.findMany({ select: { id: true } })).map(({ id }) => id)
 	const locationIds = locations.map(({ id }) => id)
-
-	console.log('asdas')
-	console.log(users.length)
-	console.log(locationIds.length)
 
 	await prisma.$transaction(
 		create(300, 600, () =>
