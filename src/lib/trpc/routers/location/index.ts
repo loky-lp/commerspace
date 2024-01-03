@@ -136,8 +136,12 @@ export const locationRouter = router({
 	search: publicOrProtectedProcedure
 		.input(
 			z.object({
-				// TODO: Add type, check-in and check-out dates for filtering
 				position: z.string().min(3),
+
+				// TODO: Consider making the these fields optional
+				category: z.string().min(3),
+				checkIn: z.coerce.date(),
+				checkOut: z.coerce.date(),
 			}),
 		)
 		.query(async ({ ctx: { user }, input: { position } }) => {
