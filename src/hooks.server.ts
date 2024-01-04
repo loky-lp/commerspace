@@ -32,13 +32,13 @@ const protectedRoutesHandle: Handle = async ({ event, resolve }) => {
 		const session = await event.locals.getSession()
 
 		if (!session?.user || session.user.role != UserRole.HOST)
-			throw error(404)
+			error(404)
 
 	} else if (event.url.pathname.startsWith('/admin')) {
 		const session = await event.locals.getSession()
 
 		if (!session?.user || session.user.role != UserRole.ADMIN)
-			throw error(404)
+			error(404)
 	}
 
 	return resolve(event)

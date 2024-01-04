@@ -15,10 +15,10 @@ export const load: PageServerLoad = async ({ fetch, url, params: { position } })
 		}
 	} catch (e: unknown) {
 		if (isTRPCClientError(e) && e.data?.code === 'NOT_FOUND') {
-			throw error(404, 'invalid position')
+			error(404, 'invalid position')
 		}
 
-		throw error(500, 'Error fetching locations')
+		error(500, 'Error fetching locations')
 	}
 }
 

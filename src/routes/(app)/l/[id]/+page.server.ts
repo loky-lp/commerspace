@@ -8,6 +8,6 @@ export const load: PageServerLoad = async ({ fetch, url, params: { id } }) => {
 			location: await trpc({ fetch, url }).location.get.query({ id }),
 		}
 	} catch (e: unknown) {
-		throw error(404, 'Location not found')
+		error(404, 'Location not found')
 	}
 }
