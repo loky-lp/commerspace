@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte'
-	import { Map } from 'mapbox-gl'
+	import mapboxGL from 'mapbox-gl'
 	import { setMapbox } from '$lib/context'
 	import { get, writable } from 'svelte/store'
 
@@ -10,7 +10,7 @@
 
 	// let map: Map
 	let mapElement: HTMLDivElement
-	const map = writable<Map | undefined>(undefined)
+	const map = writable<mapboxGL.Map | undefined>(undefined)
 	setMapbox(map)
 
 	export let lng = 0
@@ -49,7 +49,7 @@
 		// await new Promise(r => setTimeout(r, 2000))
 		console.log('creating map')
 
-		const m = new Map({
+		const m = new mapboxGL.Map({
 			container: mapElement,
 			accessToken: PUBLIC_MAPBOX_TOKEN,
 			style: 'mapbox://styles/mapbox/dark-v10', // HACK: Hardcoded style

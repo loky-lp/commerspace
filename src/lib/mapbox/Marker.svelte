@@ -1,17 +1,17 @@
 <script lang="ts">
-	import { Marker } from 'mapbox-gl'
+	import mapboxGL from 'mapbox-gl'
 	import { onMount } from 'svelte'
 	import { getMapbox } from '$lib/context'
 
 	const map = getMapbox()
 
-	let marker: Marker
+	let marker: mapboxGL.Marker
 
 	export let lngLat: [number, number]
 
 	onMount(() => {
 		console.log('marker onMount', { $map, marker })
-		marker = new Marker({})
+		marker = new mapboxGL.Marker({})
 		marker.setLngLat(lngLat)
 
 		return () => {
