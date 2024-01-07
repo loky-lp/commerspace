@@ -16,6 +16,7 @@
 	let position: string
 	let checkIn: Date = new Date()
 	let checkOut: Date = new Date()
+	checkOut.setDate(checkOut.getDate() + 6)
 
 	function submit() {
 		// Form some reason we are not able to generate the FormData from the formElement, hence we need to do it manually
@@ -23,8 +24,8 @@
 		const data = new FormData()
 		data.append('category', category)
 		data.append('position', position)
-		data.append('checkIn', checkIn.toISOString())
-		data.append('checkOut', checkOut.toISOString())
+		data.append('checkIn', checkIn.toISOString().split('T')[0])
+		data.append('checkOut', checkOut.toISOString().split('T')[0])
 		dispatch('submit', data)
 	}
 

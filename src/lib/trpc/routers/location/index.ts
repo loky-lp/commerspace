@@ -144,13 +144,16 @@ export const locationRouter = router({
 				checkOut: z.coerce.date(),
 			}),
 		)
-		.query(async ({ ctx: { user }, input: { position } }) => {
+		.query(async ({ ctx: { user }, input: { position, category, checkIn, checkOut } }) => {
+			if (checkIn > checkOut)
+				throw new TRPCError({ code: 'BAD_REQUEST', message: 'checkIn date must be less than checkOut date' })
+
 			const positionCheck = await prisma.locationPosition.findUnique({
 				where: { id: position },
 			})
 
 			if (!positionCheck)
-				throw new TRPCError({ code: 'NOT_FOUND' })
+				throw new TRPCError({ code: 'NOT_FOUND', message: 'Invalid position' })
 
 			const include: Prisma.LocationInclude = {
 				rates: true,
@@ -170,6 +173,15 @@ export const locationRouter = router({
 			const locations = await prisma.location.findMany({
 				where: {
 					positionId: position,
+					typeId: category,
+					reservations: {
+						every: {
+							OR: [
+								{ checkOut: { lte: checkIn } },
+								{ checkIn: { gte: checkOut } },
+							],
+						},
+					},
 					deletedAt: null,
 				},
 				include,
