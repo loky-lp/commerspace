@@ -14,8 +14,12 @@ export const load: PageServerLoad = async ({ fetch, url, params: { position } })
 			locations: await trpc({ fetch, url }).location.search.query({ position, ...searchParams }),
 		}
 	} catch (e: unknown) {
-		if (isTRPCClientError(e) && e.data?.code === 'NOT_FOUND') {
-			error(404, 'invalid position')
+		if (isTRPCClientError(e)) {
+			if (e.data?.code === 'NOT_FOUND') {
+				error(404, e.message)
+			} else if (e.data?.code === 'BAD_REQUEST') {
+				error(400, e.message)
+			}
 		}
 
 		error(500, 'Error fetching locations')
