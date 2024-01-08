@@ -254,11 +254,13 @@ async function seed() {
 	const locationIds = locations.map(({ id }) => id)
 
 	await prisma.$transaction(
-		create(300, 600, () =>
-			prisma.order.create({
+		create(1000, 1500, () => {
+			const userId = faker.helpers.arrayElement(users)
+			const locationId = faker.helpers.arrayElement(locationIds)
+			return prisma.order.create({
 				data: {
 					user: {
-						connect: { id: faker.helpers.arrayElement(users) },
+						connect: { id: userId },
 					},
 
 					name: faker.lorem.sentence(5),
@@ -272,10 +274,10 @@ async function seed() {
 					reservation: {
 						create: {
 							location: {
-								connect: { id: faker.helpers.arrayElement(locationIds) },
+								connect: { id: locationId },
 							},
 							user: {
-								connect: { id: faker.helpers.arrayElement(users) },
+								connect: { id: userId },
 							},
 
 							checkIn: faker.date.past({ years: 1 }),
@@ -285,8 +287,8 @@ async function seed() {
 
 					createdAt: nextCreatedAt(),
 				},
-			}),
-		),
+			})
+		}),
 	)
 
 	console.log(printPerformanceDiff(startTime))
