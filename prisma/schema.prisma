@@ -567,7 +567,7 @@ model Reservation {
 	location Location @relation(fields: [locationId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 	order    Order?   @relation(fields: [orderId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 
-	@@unique([userId, locationId])
+	// @@unique([userId, locationId])
 	@@unique([orderId])
 	@@index(userId)
 	@@index(locationId)
