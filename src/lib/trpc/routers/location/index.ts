@@ -1,4 +1,4 @@
-import { protectedProcedure, publicOrProtectedProcedure, router } from '$lib/trpc'
+import { adminProcedure, protectedProcedure, publicOrProtectedProcedure, router } from '$lib/trpc'
 import type { inferRouterInputs, inferRouterOutputs } from '@trpc/server'
 import { TRPCError } from '@trpc/server'
 import {
@@ -7,6 +7,7 @@ import {
 	prisma,
 	Prisma,
 	rateIntervals,
+	tsQuery,
 	UserRole,
 } from '$lib/prisma'
 import { z } from 'zod'
@@ -17,6 +18,80 @@ export type LocationRouterOutputs = inferRouterOutputs<LocationRouter>
 
 export const locationRouter = router({
 	// region Admin procedures
+
+	/** Get and query all the locations for the admin section  */
+	paginate: adminProcedure
+		.input(
+			z.object({
+				query: z.string(), // TODO: Create custom zod schema to replace singleLine and trim
+
+				//
+				page: z.number().int().min(0),
+				limit: z.number().int().positive().min(1).max(100),
+
+				//
+				orderBy: z
+					.object({
+						displayName: z.enum(['asc', 'desc']).nullish(),
+						userId: z.enum(['asc', 'desc']).nullish(),
+						typeId: z.enum(['asc', 'desc']).nullish(),
+						createdAt: z.enum(['asc', 'desc']).nullish(),
+					})
+					.transform(val =>
+						// TODO: Create and use extended User types
+						Prisma.validator<Prisma.LocationOrderByWithAggregationInput[]>()([
+							{ displayName: val.displayName || undefined },
+							{ userId: val.userId || undefined },
+							{ typeId: val.typeId || undefined },
+							{ createdAt: val.createdAt || undefined },
+						]),
+					),
+			}),
+		)
+		.query(async ({ input: { query, page, limit, orderBy } }) => {
+			const where: Prisma.LocationWhereInput = {
+				deletedAt: null,
+			}
+
+			const search = tsQuery(query)
+			if (search) {
+				where.OR = [
+					{ key: { contains: query, mode: 'insensitive' } },
+					{ typeId: { search, mode: 'insensitive' } },
+					{ displayName: { search, mode: 'insensitive' } },
+					{ description: { search, mode: 'insensitive' } },
+					{
+						user: {
+							OR: [
+								{ email: { contains: query, mode: 'insensitive' } },
+								// { phone: { contains: query, mode: 'insensitive' } },
+
+								// { name: { search, mode: 'insensitive' } }, // Prisma == 💩
+								{ firstName: { search, mode: 'insensitive' } },
+								{ lastName: { search, mode: 'insensitive' } },
+							],
+						},
+					},
+				]
+			}
+
+			const [size, items] = await prisma.$transaction([
+				prisma.location.count({ where }),
+				prisma.location.findMany({
+					skip: page * limit,
+					take: limit,
+					orderBy,
+					where,
+				}),
+			])
+
+			return {
+				size,
+				limit,
+				page,
+				items,
+			}
+		}),
 
 	// endregion
 
