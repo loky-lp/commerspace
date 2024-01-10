@@ -2,6 +2,7 @@
 	import { createEventDispatcher } from 'svelte'
 	import type { AutocompleteOption, PopupSettings } from '@skeletonlabs/skeleton'
 	import { Autocomplete, popup } from '@skeletonlabs/skeleton'
+	import { page } from '$app/stores'
 
 	const dispatch = createEventDispatcher<{
 		submit: FormData
@@ -12,8 +13,8 @@
 	}
 	export let categories: Category[]
 
-	let category: string
-	let position: string
+	let category: string = $page.url.searchParams.get('category') || categories[0].id
+	let position: string = $page.url.pathname.includes('/s/') ? $page.url.pathname.split('/')[2] : ''
 	let checkIn: Date = new Date()
 	let checkOut: Date = new Date()
 	checkOut.setDate(checkOut.getDate() + 6)
