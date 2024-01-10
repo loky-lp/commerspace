@@ -14,7 +14,7 @@
 	const { categories, positions } = data
 	// This approach is suboptimal when the page contains a lot of locations,
 	// for fine-grained reactivity we have to wait for Svelte 5
-	let { locations } = data
+	$: ({ locations } = data)
 
 	let lng = 0
 	let lat = 0
