@@ -73,7 +73,8 @@
 			/>
 		</div>
 	</div>
-	<input class="input" placeholder="Picker" required type="text">
+	<input class="input" required type="date">
+	<input class="input" required type="date">
 	<button class="btn variant-filled-primary" type="submit">Carica</button>
 </form>
 
