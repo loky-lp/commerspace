@@ -6,7 +6,9 @@
 	import { browser } from '$app/environment'
 	import { signOut } from '@auth/sveltekit/client'
 	import { getIsScrolled, setIsScrolled } from '$lib/context'
+	// import { onMount } from 'svelte'
 
+	// TODO: Migrate to derived stores
 	$: isIndexPage = $page.url.pathname == '/'
 	$: isPageSizeFixed = $page.url.pathname.startsWith('/s/')
 	$: user = $page.data.session?.user
@@ -73,15 +75,18 @@
 		document.documentElement.style.setProperty('--header-offset', headerElement.offsetHeight + 'px')
 	}
 
+	// onMount(() => {
+	// 	// updateHeaderOffset()
+	// 	window.dispatchEvent(new Event('resize'));
+	// })
 	$: {
-		if (browser) {
+		if (browser && headerElement) {
+			// window.addEventListener('resize', (e) => console.log(e))
 			if (isPageSizeFixed) {
-				console.log('clearing and recalling the handler', isPageSizeFixed)
 				window.removeEventListener('resize', updateHeaderOffset)
 				window.addEventListener('resize', updateHeaderOffset)
 				updateHeaderOffset()
 			} else {
-				console.log('clearing the handler', isPageSizeFixed)
 				window.removeEventListener('resize', updateHeaderOffset)
 			}
 		}

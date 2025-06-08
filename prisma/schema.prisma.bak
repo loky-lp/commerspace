@@ -1,0 +1,320 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("POSTGRES_PRISMA_URL")
+  directUrl         = env("POSTGRES_URL_NON_POOLING")
+  shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+// Notice:
+// - some tables have (onUpdate: Cascade, onDelete: Cascade) when the parent is soft-deletable (deletedAt)
+// - (onUpdate: Cascade) is set explicitly for clarity
+// - prices are expressed in minor currency, no decimals are present
+// - gen_random_uuid() is the native pgcrypto ext from postgres, it generates version 4 UUIDs which are non-sortable
+
+// # ---- User ---- #
+
+/// A simple user role
+enum UserRole {
+  /// The user have no role, this is the default value.
+  NONE
+
+  /// The user is a host and can edit it's own properties
+  HOST
+
+  /// The user is an administrator and have full access to the system.
+  ADMIN
+}
+
+enum UserStatus {
+  NONE
+
+  /// The user is banned and cannot use the application.
+  BANNED
+}
+
+// The user model
+model User {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  /// The user primary email
+  /// ## Note, email are lowercased, there's a chance the email provider is case-sensitive, in that case the user will never receive the email
+  ///
+  /// @email @max(255)
+  email String @unique @db.VarChar(255)
+
+  emailVerifiedAt DateTime?
+
+  /// The user nickname, the user can change it at any time, this field is **not** unique
+  ///
+  /// @max(255)
+//  name String @db.VarChar(255)
+
+  /// The user avatar url
+  ///
+  /// @url
+//  image String
+
+  /// The user first name
+  ///
+  /// @max(255)
+  firstName String @db.VarChar(255)
+
+  /// The user last name
+  ///
+  /// @max(255)
+  lastName String @db.VarChar(255)
+
+  /// The user phone number
+  ///
+  /// @phone(255)
+//  phone String? @db.VarChar(255)
+
+//  phoneVerifiedAt DateTime?
+
+  /// True when the phone number is fake
+//  phoneMarkedAsInvalid Boolean?
+
+//  documentVerifiedAt DateTime?
+
+  /// The user role.
+  role UserRole @default(NONE)
+
+  status UserStatus @default(NONE)
+
+//  lastActivityAt DateTime?
+//  lastLoginAt    DateTime?
+
+  createdAt DateTime  @unique @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  bannedAt  DateTime?
+  deletedAt DateTime?
+
+  /// The user password credentials
+  credentials Credentials?
+
+  /// The Time-based One-time Password token
+  totp                    TOTPToken?
+  accounts                Account[]
+  sessions                Session[]
+  passwordResetTokens     PasswordResetToken[]
+  emailVerificationTokens EmailVerificationToken[]
+  identificationRequests  UserIdentificationRequest?
+
+  // billing details
+  billing UserBillingData?
+
+  @@index(createdAt)
+}
+
+// Note: only one password credentials is allowed per user
+model Credentials {
+  /// The {@link User} id.
+  id String @id @db.Uuid
+
+  /// The password hash
+  password String
+
+  /// ### DO NOT USE THIS FIELD, IT WILL BE REMOVED
+  legacySalt String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  user User @relation(fields: [id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+// Note: only one OTP token is allowed per user
+model TOTPToken {
+  /// The {@link User} id.
+  id String @id @db.Uuid
+
+  /// The token secret value.
+  token String
+
+  /// The token first verification date, used to keep track of the date when the user has verified the token code for the first time.
+  /// Essential for ensuring that the user has at least verified the token code once.
+  verifiedAt DateTime?
+
+  /// The {@link TOTPToken} creation date.
+  createdAt DateTime @default(now())
+
+  /// The {@link TOTPToken} last update date.
+  updatedAt DateTime @default(now()) @updatedAt
+
+  user User @relation(fields: [id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+/// Allow the user to sync different providers together, for example
+/// the user might want to login with Google or Facebook on the same account
+model Account {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  type String
+
+  /// The {@link User} id.
+  userId String @db.Uuid
+
+  provider String
+
+  /// The {@link AccountProvider}.
+  providerAccountId String
+  refreshToken      String?
+  accessToken       String?
+  expiresAt         Int?
+  tokenType         String?
+  scope             String?
+  idToken           String?
+  sessionState      String?
+
+  /// The {@link Account} creation date.
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId], name: "providerProviderAccountId")
+  @@index(userId)
+}
+
+/// The {@link User} session, a user might maintain multiple sessions at any given time.
+model Session {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  /// The {@link User} id.
+  userId String @db.Uuid
+
+  /// The {@link Session} unique token, intended to be stored in a cookie.
+  sessionToken String @unique
+
+  /// The session pool
+  pool String
+
+  /// The session ip, used to check whether the session has been hijacked
+  ip String
+
+  /// The session user agent, used to check whether the session has been hijacked
+  userAgent String
+
+  /// The session expiration date, after this date, the session is considered invalid, and it will be removed from the database at a later time..
+  expiresAt DateTime
+
+  /// The {@link Session} creation date.
+  createdAt DateTime @default(now())
+
+  /// The {@link Session} last update date.
+  updatedAt DateTime @default(now()) @updatedAt
+
+  /// The {@link User} associated with this {@link Session}.
+  user User @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  @@unique([sessionToken, pool])
+  @@index(userId)
+}
+
+model VerificationToken {
+  token String @id
+
+  identifier String
+  expiresAt  DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@unique([identifier, token])
+}
+
+model EmailVerificationToken {
+  token String @id
+
+  /// The {@link User} id.
+  userId String @db.Uuid
+
+  ip        String
+  userAgent String
+  email     String
+
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  @@index(userId)
+}
+
+model PasswordResetToken {
+  token String @id
+
+  /// The {@link User} id.
+  userId String @db.Uuid
+
+  ip        String
+  userAgent String
+  email     String
+
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  @@index(userId)
+}
+
+// # ---- User Details ---- #
+
+// TODO: users can store multiple billing data and set one as default
+model UserBillingData {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  /// The {@link User} id.
+  userId String @unique @db.Uuid
+
+  /// Ragione Sociale
+  businessName String
+
+  /// Partita IVA (optional)
+  vat String
+
+  /// Codice Fiscale
+  taxCode String
+
+  /// Via, street
+  street String
+
+  /// Città
+  city String
+
+  /// Provincia / Stato Estero
+  state String
+
+  /// CAP
+  postalCode String
+
+  /// Paese
+  country String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  @@index(userId)
+}
+
+model UserIdentificationRequest {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  /// The {@link User} id.
+  userId String @unique @db.Uuid
+
+  file        String
+  validatedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  @@index(userId)
+}

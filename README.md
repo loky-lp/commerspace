@@ -1,41 +1,21 @@
-# create-svelte
+# Commerspace
 
-Everything you need to build a Svelte project, powered
-by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+This was a project commissioned by a third party.
+The goal was to create a platform that would have been the "Airbnb" for businesses.
 
-## Creating a project
+But the client vanished during the development, taking away the payments too.
 
-If you're seeing this, you've probably already done this step. Congrats!
+Now this is an old project, with vulnerable dependencies and bad implementations,
+so for what it's worth can be shared publicly.
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+## Technical considerations
 
-## Developing
+The project was built using:
+- `svelte@4` and `@svelte/kit@2` because they are awesome XD
+- `@auth/core` as the auth library, but I wouldn't pick it again, I'd rather implement the auth myself or use a third party like [Auth0](https://auth0.com/) or [Clerk](https://clerk.com/)
+- `trpc@10` for the server side logic, but I'd pick sveltekit native form actions
+- `prisma@5` as the ORM, but I would pick [drizzle](https://orm.drizzle.team/) now
+- `@skeletonlabs/skeleton@2` as the UI library, it was fine, but sometimes I needed to hack it. I'd consider it again if I'm unable to use [bits-ui](https://www.bits-ui.com/)
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a
-development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target
-> environment.
+As you can see, I have a lot of considerations on the tech choices. It was a fun project where I could experiment.
